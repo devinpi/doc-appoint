@@ -60,7 +60,6 @@ footer a>img, footer p {
     color: var(--main-theme-color);
 }
 
-
 /* login styling */
 .login-container{
     display: flex;
@@ -69,7 +68,7 @@ footer a>img, footer p {
     width: 300px;
 }
 
-.login-container h3 {
+.login-container h4 {
     text-align: center;
 }
 .login-form, .login-new-account{
@@ -87,6 +86,21 @@ footer a>img, footer p {
     justify-content: center;
     height: 70vh;
     align-items: center;
+}
+
+.google {
+    padding-left: 10px;
+    padding-right:10px ;
+}
+
+.google img{
+    height: 25px;
+    width: 25px;
+}
+
+.btn-google{
+    border: 1px solid black;
+    width: 100%;
 }
 
 

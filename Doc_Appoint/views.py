@@ -21,6 +21,7 @@ def login_view(request):
     return render(request, "Doc_Appoint/login.html", {})
 
 def logout_view(request):
+    logout(request)
     return HttpResponseRedirect(reverse("index"))
 
 
