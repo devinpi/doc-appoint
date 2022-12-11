@@ -1,0 +1,92 @@
+/* variables */
+:root {
+    --main-theme-color: #06acd7;
+    --main-theme-button: #F39530;
+}
+
+/* index page styling */
+.hero {
+    display: flex;
+    justify-content: center;
+    margin: 5px;
+    margin-top: 80px;
+}
+
+.hero button {
+    background-color: var(--main-theme-button);
+    color: white;
+    font-weight: bold;
+}
+.hero-heading-container {
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+}
+
+.hero-image {
+    width: 500px;
+    height: 500px;
+}
+#hero-heading{
+    font-size: 75px;
+}
+
+.about-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.about-container h3 {
+    font-size: 50px;
+}
+
+.about-content {
+    width: 75vw;
+    font-size: 20px;
+}
+
+footer {
+    display: flex;
+    bottom: 0px;
+    width: 100%;
+    height: 50px;
+    background-color: #ffffff;
+    justify-content: center;
+}
+footer a>img, footer p {
+    margin: 10px;
+    color: var(--main-theme-color);
+}
+
+
+/* login styling */
+.login-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;  
+    width: 300px;
+}
+
+.login-container h3 {
+    text-align: center;
+}
+.login-form, .login-new-account{
+    padding: 10px;
+    text-align: center;
+}
+
+.login-form input[type='submit']{
+    background-color: var(--main-theme-button);
+    color: white;
+    width: 100%;
+}
+.login-wrapper {
+    display: flex;
+    justify-content: center;
+    height: 70vh;
+    align-items: center;
+}
+
+

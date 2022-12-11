@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width initial-scale=1" />
+      <title>{% block title %}Doc Appoint{% endblock %}</title>
+      <link rel="icon" href="./static/Doc_Appoint/Doc Appoint_title_icon.png" type="image/icon type">
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+      <link href="{% static 'Doc_Appoint/styles.css' %}" rel="stylesheet" type="text/css">
+      <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+      <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+      {% block script %}
+      {% endblock %}
+    </head>
+    <body>
+      <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="{% url 'index' %}">
+          <img src="./static/Doc_Appoint/Doc Appoint_logo_v2.png" width="80" height="80" alt="doc_appoint_logo">
+        </a>
+          <ul class="navbar-nav ">
+            <li class="nav-item active">
+              <a class="nav-link" href="{% url 'index' %}">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'login' %}">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'register' %}">Register</a>
+            </li>
+          </ul>
+      </nav>
+      <div class="body">
+          {% block body %}
+          {% endblock %}
+      </div>
+      <div class="foot">
+        {% block footer %}
+        {% endblock %}
+      </div>
+    </body>
+</html>
