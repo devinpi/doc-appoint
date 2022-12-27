@@ -8,7 +8,7 @@
                 <h4>Register with your email</h4>
             </div>
             <div class="login-form">
-                <form action="{% url 'register' %}" method="post">
+                <form action="" method="post">
                     {% csrf_token %}
                     <div class="form-group">
                         <input class="form-control" autofocus type="text" name="username" placeholder="Username">
@@ -26,10 +26,10 @@
                 </form>          
             </div>
             <div>
-                <p style="text-align: center;">or signup with</p>
+                <p style="text-align: center;">or</p>
             </div>
             <div class="google">
-                <a href="{% provider_login_url 'google' %}"><button class="btn btn-google"><img src="./static/Doc_Appoint/icons8-google.png"></button></a> 
+                <a href="{% provider_login_url 'google' %}"><button class="btn btn-google"><span>Continue with </span><img src="../../static/Doc_Appoint/icons8-google.png"></button></a> 
             </div>
             <div class="login-new-account">
                 <p>Already have and account? <a href="{% url 'login' %}">Login</a></p>

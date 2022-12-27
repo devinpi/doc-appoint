@@ -20,13 +20,13 @@
                 </form>           
             </div>
             <div>
-                <p style="text-align: center;">or signup with</p>
+                <p style="text-align: center;">or</p>
             </div>
             <div class="google">
-                <a href="{% provider_login_url 'google' %}"><button class="btn btn-google"><img src="./static/Doc_Appoint/icons8-google.png"></button></a> 
+                <a href="{% provider_login_url 'google' %}"><button class="btn btn-google"><span>Continue with </span><img src="./static/Doc_Appoint/icons8-google.png"></button></a> 
             </div>
             <div class="login-new-account">
-                <p>New here? <a href="{% url 'register' %}">Create an account</a></p>
+                <p>New here? <a href="{% url 'select' %}">Create an account</a></p>
             </div>
         </div>
     </div>

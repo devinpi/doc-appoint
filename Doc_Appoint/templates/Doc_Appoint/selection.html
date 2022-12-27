@@ -1,0 +1,21 @@
+{% extends "Doc_Appoint/layout.html" %}
+
+{% block body %}
+    <div class="option-container">
+        <div class="option-sub-container">
+            <h2 class="option-heading lead">Looking for Doctors?</h2>
+            <a href="{% url 'register' 'personal' %}"><img class="option-image" src="../../static/Doc_Appoint/patient.svg"></a>
+            <div class="option-description">
+                <p class="lead">Search for the doctors you want, and setup time for an appoitment.</p>
+            </div>
+        </div>
+        <div class="option-sub-container">
+            <h2 class="option-heading lead">Join as a Doctor.</h2>
+            <a href="{% url 'register' 'doctor' %}"><img class="option-image" src="../../static/Doc_Appoint/doctor.svg"></a>
+            <div class="option-description">
+                <p class="lead">Manage your patient appointments and keep track of the reports.</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

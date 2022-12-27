@@ -7,21 +7,25 @@
       <h1 id="hero-heading">Connecting the right doctors with you.</h1>
     </div>
     <div>
-      <a href="{% url 'register' %}"
-        ><button style="margin-top: 10px" class="btn">Get Started</button></a
-      >
+      {% if user.is_authenticated %}
+        <a href=""
+          ><button style="margin: 10px 0 0 0" class="btn">Go to Dashboard</button></a
+        >
+      {% else %}
+        <a href="{% url 'select' %}"
+          ><button style="margin: 10px 0 0 0" class="btn">Get Started</button></a
+        >
+      {% endif %}
     </div>
   </div>
   <div class="hero-image-container">
-    <img class="hero-image" src="./static/Doc_Appoint/hero image.svg" />
+    <img class="hero-image image-fluid" src="./static/Doc_Appoint/hero image.svg" />
   </div>
 </div>
-<div class="about-container">
-  <div>
-    <h3>About Us</h3>
-  </div>
-  <div class="about-content">
-    <p>
+<div class="px-2 py-3 my-5 text-center">
+  <h1 class="display-5 fw-bold">Who are we?</h1>
+  <div class="col-lg-8 mx-auto">
+    <p class="lead mb-4">
       It is a long established fact that a reader will be distracted by the
       readable content of a page when looking at its layout. The point of using
       Lorem Ipsum is that it has a more-or-less normal distribution of letters,
@@ -45,5 +49,4 @@
         <p>© Doc Appoint, 2022</p>
         </div>
     </footer>
-
 {% endblock %}
