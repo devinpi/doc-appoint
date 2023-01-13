@@ -16,19 +16,25 @@ class Patient(models.Model):
     report = models.ForeignKey('Report', blank=True, null=True , on_delete=models.CASCADE, related_name="patient_reports")
     
     def __str__(self):
-        return f"{self.id} | {self.user} | {self.report}"
+        return f"{self.id} | {self.report}"
 
 class Doctor(models.Model):
-    doctor_name = models.ForeignKey('User', blank=True, null=True, on_delete=models.CASCADE, related_name="doctor_name")
+    DOCTOR_GENDER = (
+        ('M', 'male'),
+        ('F', 'female')
+    )
+    doctor_name = models.ForeignKey('User', on_delete=models.CASCADE, related_name="doctor_name")
     services = models.CharField(max_length=100)
     experience = models.IntegerField()
     study = models.TextField()
-    patient = models.ManyToManyField('Patient', blank=True, related_name="doctors_patients", default=0)
+    patient = models.ManyToManyField('Patient', blank=True, related_name="doctors_patients", default=[0])
     service_time_from = models.IntegerField(null=True)
     service_time_to = models.IntegerField(null=True)
     address = models.TextField()
+    phone_number = models.CharField(max_length=12, blank=True, null=True)
+    gender = models.CharField(max_length=1, blank=True, choices=DOCTOR_GENDER)
     def __str__(self):
-        return f"{self.id} | {self.user} | {self.services} | {self.experience} | {self.patient} | {self.service_time} | {self.address}"
+        return f"{self.id} | {self.services} | {self.experience} | {self.patient} | {self.address}"
 
 class Report(models.Model):
     patient = models.ForeignKey('Patient', on_delete=models.CASCADE, related_name="report_of_patient")

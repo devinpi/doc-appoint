@@ -8,9 +8,15 @@
     </div>
     <div>
       {% if user.is_authenticated %}
-        <a href=""
+        {% if user.user_type == 'PR' %}
+          <a href="{% url 'dashboard-personal' %}"
+            ><button style="margin: 10px 0 0 0" class="btn">Go to Dashboard</button></a
+          >
+        {% else %}
+          <a href="{% url 'dashboard-doctor' %}"
           ><button style="margin: 10px 0 0 0" class="btn">Go to Dashboard</button></a
-        >
+          >
+        {% endif %}
       {% else %}
         <a href="{% url 'select' %}"
           ><button style="margin: 10px 0 0 0" class="btn">Get Started</button></a

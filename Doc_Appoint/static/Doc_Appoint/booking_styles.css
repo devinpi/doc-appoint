@@ -1,0 +1,27 @@
+:root {
+    --main-theme-color: #06acd7;
+    --main-theme-button: #F39530;
+}
+
+.doc-details-container {
+    padding: 15px;
+}
+.doc-details{
+    padding: 15px;
+}
+.doc-name{
+    text-align: center;
+    margin: 15px 0 0 0;
+    color: var(--main-theme-color)
+}
+
+.doc-book-app{
+    text-align: center;
+    /* background-color: #75c1d4; */
+    background-color: #acddea;
+    color: rgb(74, 74, 74);
+}
+
+.doc-book-app>h3{
+    padding: 10px;
+}

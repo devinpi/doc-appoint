@@ -1,0 +1,52 @@
+{% extends "Doc_Appoint/layout.html" %}
+
+{% block body %}
+
+<div class="search-container">
+    <form method="POST" action="">
+        {% csrf_token %}
+        <input class="search-box" type="text" name='q' placeholder="Search for doctors (by name or speciality)...">
+        <input class="btn btn-primary" type="submit" value="Search" name="search">
+    </form>
+</div>
+<div class="dashboard-container">
+    <div class="dashboard-links-container">
+        <a class="dashboard-links lead" href="">Upcoming Appointments</a>
+        <a class="dashboard-links lead" href="">History</a>
+        <!-- <a class="dashboard-links lead" href="">Change Profile Settings</a> -->
+    </div>
+    <div class="dashboard-view lead">
+        {% if not err %}
+            {% for d in doc_name %}
+                <div class="search-results">
+                    <div>
+                        <div class="info">
+                            <span class=""><strong>Name:</strong> </span>{{d.doctor_name.username}}
+                        </div>
+                        <div class="info">
+                            <span class=""><strong>Location: </strong></span>{{d.address}}
+                        </div>
+                        <div class="info">
+                            <span class=""><strong>Phone: </strong> </span>{{d.phone_number}}
+                        </div>
+                        <div class="info">
+                            <span class=""><strong>Services:</strong> </span>{{d.services}}
+                        </div>
+                    </div>
+                    <div class="booking-form">
+                        <form action="{% url 'book-appointment' d.id %}" method="POST">
+                            {% csrf_token %}
+                            <input class="booking-btn btn" type="submit" name="booking" value="Book an Appointment">
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-danger">
+                <strong>No values Found</strong>
+            </div>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

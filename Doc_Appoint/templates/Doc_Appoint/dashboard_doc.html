@@ -1,0 +1,33 @@
+{% extends "Doc_Appoint/layout.html" %}
+
+{% block body %}
+
+<div class="search-container">
+    <form action="" method="POST">
+        <input class="search-box" type="text" name='q' placeholder="Search for patients...">
+        <input class="btn btn-primary" type="submit" value="Search">
+    </form>
+</div>
+<div>Welcome '{{user.username}}'</div>
+<div class="dashboard-container">
+    <div class="dashboard-links-container">
+        <a class="dashboard-links lead" href="">Upcoming Appointments</a>
+        <a class="dashboard-links lead" href="">History</a>
+        <a class="dashboard-links lead" href="">Change Profile Settings</a>
+    </div>
+    <div class="dashboard-view">
+
+    </div>
+
+</div>
+{% endblock %}
+{% block footer %}
+    <footer>
+        <a href="{% url 'index' %}">
+        <img src="./static/Doc_Appoint/Doc Appoint_logo_v2.png" width="30" height="30" alt="doc_appoint_logo">
+        </a>
+        <div>
+        <p>© Doc Appoint, 2022</p>
+        </div>
+    </footer>
+{% endblock %}

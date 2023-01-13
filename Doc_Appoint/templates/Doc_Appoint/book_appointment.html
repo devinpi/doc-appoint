@@ -1,0 +1,32 @@
+{% extends "Doc_Appoint/layout.html" %}
+
+{% block body %}
+    <div class="doc-name">
+        <h2 class="lead display-4" style="font-weight: 400">{{doc.doctor_name.username}}</h2>
+    </div>
+    <div class="doc-details-container">
+        <div class="doc-details">
+            <div class="details-bg">
+                <h3 style="font-weight: 500">Details</h3>
+                <div><strong>Full name: </strong>{{doc.doctor_name.username}}</div>
+                <div><strong>Gender: </strong>{{doc.gender}}</div>
+                <div class="info"><strong>Education: </strong>{{doc.study}}</div>
+            </div>
+        </div>
+        <div class="doc-details">
+            <h3 style="font-weight: 500">Place of Practice</h3>
+            <div class="info"><strong>Primary Location: </strong>{{doc.address}}</div>
+            <div><strong>Phone: </strong>{{doc.phone_number}}</div>
+        </div>
+        <div class="doc-details">
+            <h3 style="font-weight: 500">Services Provided</h3>
+            <div><strong>Speciality: </strong>{{doc.services}}</div>
+        </div>
+    </div>
+    <div class="doc-details">
+        <div class="doc-book-app">
+            <h3 style="font-weight: 500">Book your Appointment</h3>
+        </div>
+    </div>
+    <!-- <p>{{doc.doctor_name.username}}</p> -->
+{% endblock %}

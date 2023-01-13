@@ -73,35 +73,185 @@ def register(request, user_selection):
 def select(request):
     return render(request, "Doc_Appoint/selection.html")
 
-
 def next_steps(request):
-    if request.user.user_type == 'DR':
-        if request.method == 'POST':
-            doc_user = User.objects.get(username=request.user)
-            services = request.POST['services']
-            experience = request.POST['experience']
-            study = request.POST.get('study')
-            service_time_from = request.POST.get('service_time_from')
-            service_time_to = request.POST.get('service_time_to')
-            address = request.POST.get('address')
-            try:
-                new_doctor = Doctor.objects.create(doctor_name=doc_user,
-                    services=services,
-                    experience=experience,
-                    study=study,
-                    service_time_from=service_time_from,
-                    service_time_to=service_time_to,
-                    address=address
-                )
-                new_doctor.save()
-                # user = User.objects.create_user(username, email, password)
-                # user.save()
-            except IntegrityError as e:
-                return render(request, "Doc_Appoint/next_steps_doc.html", {
-                    "message": f"Something went wrong, {e}"
-                })
-            return HttpResponseRedirect(reverse('index'))
+    if request.user.is_authenticated:
+        if request.user.user_type == 'DR':
+            if request.method == 'POST':
+                doc_user = User.objects.get(id=request.user.id)
+                services = request.POST['services']
+                experience = request.POST['experience']
+                study = request.POST.get('study')
+                service_time_from = request.POST.get('service_time_from')
+                service_time_to = request.POST.get('service_time_to')
+                address = request.POST.get('address')
+                try:
+                    new_doctor = Doctor.objects.create(doctor_name=doc_user,
+                        services=services,
+                        experience=experience,
+                        study=study,
+                        service_time_from=service_time_from,
+                        service_time_to=service_time_to,
+                        address=address
+                    )
+                    new_doctor.save()
+                except IntegrityError:
+                    return render(request, "Doc_Appoint/next_steps_doc.html", {
+                        "message": "Something went wrong"
+                    })
+                return HttpResponseRedirect(reverse('index'))
+            else:
+                return render(request, "Doc_Appoint/next_steps_doc.html")
         else:
-            return render(request, "Doc_Appoint/next_steps_doc.html")
+            return HttpResponse('Error, user is not a doctor!')
     else:
-        return HttpResponse('Error, user is not a doctor!')
+        return HttpResponse('User not logged in!')
+
+# Dashboard
+def dashboard_doc(request):
+    if request.user.is_authenticated:
+        if request.user.user_type == 'DR':
+            return render(request, "Doc_Appoint/dashboard_doc.html", {})
+        else:
+            return HttpResponse('This is not a doctor\'s account')
+    else:
+        return HttpResponse("User not logged in!")
+
+
+def dashboard_personal(request):
+    if request.user.is_authenticated:
+        if request.user.user_type == 'PR':
+            if request.method == 'POST':
+                if 'search' in request.POST:
+                    query = request.POST.get('q')
+                    doc_name, err = search_doctors(query)
+                    return render(request, "Doc_Appoint/dashboard_personal.html", {
+                        'doc_name': doc_name,
+                        'err': err
+                    })
+                # if 'booking' in request.POST:
+                #     # return HttpResponse('booking')
+                #     return HttpResponseRedirect('book-appointment')
+            else:
+                return render(request, "Doc_Appoint/dashboard_personal.html", {
+                })
+        else:
+            return HttpResponse('This is not a personal account')
+    else:
+        return HttpResponse("User not logged in!")
+
+def search_patients(request, query):
+    pass
+
+def search_doctors(query):
+    doc = Doctor.objects.all()
+    results = []
+    found = False
+    error = False
+    if len(query) != 0:
+        # searching by name & services
+        for name in doc:
+            if query.lower() in name.doctor_name.username.lower() or query.lower() in name.services.lower():
+                if query.lower() == name.doctor_name.username.lower():
+                    u_id = User.objects.get(username=query)
+                    doc_name_get = Doctor.objects.get(doctor_name = u_id)
+                    results.append(doc_name_get)
+                    # return results, error
+                else:
+                    # sub_query_name.append(name.doctor_name.username)
+                    u_id_sub = User.objects.get(username=name.doctor_name.username)
+                    doc_name_get_sub = Doctor.objects.get(doctor_name = u_id_sub)
+                    results.append(doc_name_get_sub)
+                    # return results, error
+                # if query.lower() == name.services.lower():
+                #     doc_service = Doctor.objects.filter(services=name.services)
+                #     results.append(doc_service)
+                    # return results, error
+                # else:
+                #     results.append(name)
+                    # return results, error
+                found = True
+        if not found:
+            error = True
+        return results, error
+    else:
+        error = True
+        return results, error
+
+@login_required
+def book_appointment(request, doc_id):
+    doc = Doctor.objects.get(id = doc_id)
+
+    return render(request, "Doc_Appoint/book_appointment.html", {
+        'doc': doc
+    })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # search
+    # for n in doc_names:
+    #     if query.lower() in n.lower():
+    #         if query.lower() == n.lower():
+    #             doc_name_filter = Doctor.objects.filter(doc.doctor_name.username)
+    #             found_name = True
+    #         else:
+    #             sub_query_name.append(n)
+    #         found_name = True
+    # if not found_name:
+    #     error_name = True
+    #     found_name = False
+        
+    # for s in doc_services:
+    #     if query.lower() in s.lower():
+    #         if query.lower() == s.lower():
+    #             return HttpResponse('found', query)
+    #         else:
+    #             sub_query_service.append(s)
+    #         found_service = True
+    # if not found_service:
+    #     error_service = True
+
+    # return found_name, query
+
+# def search(request):
+#     # searches for the enteries based on the string entered in the search box. Returns a list of the matched enteries if a substring is entered.
+#     # If a string is entered and it fully matches the value in the enteries folder, it redirects to the entry page for that entry.
+#     query = request.GET.get("q")
+#     sub=[]
+#     # Setting the flags to false so if a certain condition is met, they are set to true.
+#     error=False
+#     found=False
+#     for st in util.list_entries():   
+#         if query.lower() in st.lower():
+#             if query.lower() == st.lower():
+#                 return redirect("entryPage", title=query)
+#             else:
+#                 sub.append(st) # add to the sub list when an entry is found based on the search(a sub string and not a whole string)
+#             found = True   
+#     if not found:
+#         error = "True"
+#     return render(request, "encyclopedia/search.html",{
+#         "query": query,
+#         "sub": sub,
+#         "error": error
+#     })
