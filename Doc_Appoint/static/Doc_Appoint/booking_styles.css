@@ -25,3 +25,31 @@
 .doc-book-app>h3{
     padding: 10px;
 }
+
+
+.next-steps-form-buttons input[type='submit']{
+    background-color: var(--main-theme-button);
+    color: white;
+    margin: 10px;
+}
+
+.next-steps-form-buttons input[type='reset']{
+    border: 1px solid var(--main-theme-button);
+    color: var(--main-theme-button);
+    margin: 10px;
+}
+
+/* .slots-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.time-slot{
+    border: 1px solid black;
+    padding: 10px;
+    border-radius: 3px;
+    background-color: #a9a9a9;
+} */

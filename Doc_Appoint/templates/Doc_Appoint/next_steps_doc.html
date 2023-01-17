@@ -16,7 +16,7 @@
                 {% csrf_token %}
                 <div class="form-group">
                     <label class="lead">What are the services that you or your clinic provides?</label>
-                    <input id='services' class="form-control" autofocus type="text" name="services" placeholder="Services-separate by '/ '" required>
+                    <input id='services' class="form-control" autofocus type="text" name="services" placeholder="Services-separate by ', '" required>
                 </div>
                 <div class="form-group">
                     <label class="lead">How many years of professional experience do you have?</label>
@@ -27,13 +27,17 @@
                     <textarea id='study' name='study' rows='5' class="form-control" name="address" placeholder="Type here" required></textarea>
                 </div>
                 <div class="form-group">
+                    <label class="lead">Phone Number:</label>
+                    <input id='services' class="form-control" autofocus type="text" name="phone_number" placeholder="Phone Number" required>
+                </div>
+                <div class="form-group">
                     <label class="lead">Clinic Operating Hours:</label><br>
                     <label class="lead">From</label>
-                    <input id='from-time' class="form-control" type="number" name="from-time" placeholder='From' required>
+                    <input id='from-time' class="form-control" type="time" name="from-time" placeholder='From' required>
                 </div>
                 <div class="form-group">
                     <label class="lead">To</label>
-                    <input id='to-time' class="form-control" type="number" name="to-time" required>
+                    <input id='to-time' class="form-control" type="time" name="to-time" required>
                 </div>
                 <div class="form-group">
                     <label class="lead">Provide an address for your clinic:</label>
@@ -41,7 +45,7 @@
                 </div>
                 <div class="next-steps-form-buttons">
                     <input class="btn" type="submit" value="Finish Profile">
-                    <input class="btn" type="reset" value="Reset Form">
+                    <input class="btn" type="reset" value="Reset">
                 </div>
             </form>          
         </div>

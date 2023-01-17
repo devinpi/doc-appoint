@@ -17,16 +17,38 @@
             <h3 style="font-weight: 500">Place of Practice</h3>
             <div class="info"><strong>Primary Location: </strong>{{doc.address}}</div>
             <div><strong>Phone: </strong>{{doc.phone_number}}</div>
+            <div><strong>Email: </strong>{{doc.doctor_name.email}}</div>
+            <div><strong>Operating hours: </strong>{{doc.service_time_from}} to {{doc.service_time_to}}</div>
         </div>
         <div class="doc-details">
             <h3 style="font-weight: 500">Services Provided</h3>
             <div><strong>Speciality: </strong>{{doc.services}}</div>
         </div>
     </div>
+
+    <!-- booking appointment form -->
     <div class="doc-details">
         <div class="doc-book-app">
             <h3 style="font-weight: 500">Book your Appointment</h3>
         </div>
+        <form action="" method="POST">
+            <div class="form-group">                
+                <label class="control-label" for="booking"><strong>Choose appointment time:</strong></label>
+                <select class="custom-select" name="booking" id="booking">
+                    <option selected>Select time</option>
+                    {% for t in booking_times %}
+                        <option value="{{t}}">{{t}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="app-date"><strong>Select Date:</strong></label>
+                <input class="form-control" type="date" class="" name="app-date">
+            </div>
+            <div class="next-steps-form-buttons">
+                <input class="btn" type="submit" value="Confirm Booking">
+                <input class="btn" type="reset" value="Reset">
+            </div>
+        </form>
     </div>
-    <!-- <p>{{doc.doctor_name.username}}</p> -->
 {% endblock %}

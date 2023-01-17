@@ -9,6 +9,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from .models import *
+from datetime import datetime, timedelta
 
 
 def index(request):
@@ -81,6 +82,7 @@ def next_steps(request):
                 services = request.POST['services']
                 experience = request.POST['experience']
                 study = request.POST.get('study')
+                phone = request.POST.get('phone_number')
                 service_time_from = request.POST.get('service_time_from')
                 service_time_to = request.POST.get('service_time_to')
                 address = request.POST.get('address')
@@ -89,6 +91,7 @@ def next_steps(request):
                         services=services,
                         experience=experience,
                         study=study,
+                        phone_number=phone,
                         service_time_from=service_time_from,
                         service_time_to=service_time_to,
                         address=address
@@ -177,12 +180,38 @@ def search_doctors(query):
         error = True
         return results, error
 
+
+def time_slots(doc_id):
+    slots = {}   
+    doc = Doctor.objects.get(id=doc_id)
+    t1 = doc.service_time_from.strftime("%H:%M:%S")
+    t2 = doc.service_time_to.strftime("%H:%M:%S")
+    time_from = datetime.strptime(t1, "%H:%M:%S")
+    time_to = datetime.strptime(t2, "%H:%M:%S")
+    diff = time_to - time_from
+    diff_min = diff.seconds / 60
+    diff_hour = diff_min / 60 
+    ts = time_from
+
+    ''' 
+        creating time slots based on 30 minutes diff
+        that is why multiplying by 2 so, we have 2 slots every hour.
+        storing those slots in a dict, and every slot has a value of False in the beginning.
+        if it gets filled, we'll set it to true.
+    '''
+    for i in range(int(diff_hour)*2):
+        ts = ts + timedelta(minutes=30)
+        slots[ts.time()] = False
+
+    return slots
+    
 @login_required
 def book_appointment(request, doc_id):
     doc = Doctor.objects.get(id = doc_id)
-
+    booking_times = time_slots(doc_id)
     return render(request, "Doc_Appoint/book_appointment.html", {
-        'doc': doc
+        'doc': doc,
+        'booking_times': booking_times
     })
 
 

@@ -24,14 +24,14 @@ class Doctor(models.Model):
         ('F', 'female')
     )
     doctor_name = models.ForeignKey('User', on_delete=models.CASCADE, related_name="doctor_name")
-    services = models.CharField(max_length=100)
+    services = models.TextField(max_length=100)
     experience = models.IntegerField()
     study = models.TextField()
     patient = models.ManyToManyField('Patient', blank=True, related_name="doctors_patients", default=[0])
-    service_time_from = models.IntegerField(null=True)
-    service_time_to = models.IntegerField(null=True)
+    service_time_from = models.TimeField(null=True)
+    service_time_to = models.TimeField(null=True)
     address = models.TextField()
-    phone_number = models.CharField(max_length=12, blank=True, null=True)
+    phone_number = models.CharField(max_length=14, blank=True, null=True)
     gender = models.CharField(max_length=1, blank=True, choices=DOCTOR_GENDER)
     def __str__(self):
         return f"{self.id} | {self.services} | {self.experience} | {self.patient} | {self.address}"
@@ -45,3 +45,7 @@ class Report(models.Model):
     
     def __str__(self):
         return f"{self.patient} | {self.doctor} | "
+
+
+# class Appointment(models.Model):
+#     patient = models.ForeignKey('Patient', on_delete=models.CASCADE, related_name="patient_appointment_name")
