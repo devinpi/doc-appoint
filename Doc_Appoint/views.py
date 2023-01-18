@@ -38,43 +38,46 @@ def logout_view(request):
     return HttpResponseRedirect(reverse("index"))
 
 def register(request, user_selection):
-    if user_selection == 'personal' or user_selection == "doctor":
-        if request.method == "POST":
-            username = request.POST['username']
-            email = request.POST['email']
-            password = request.POST['password']
-            confirmation = request.POST['confirmation']
-            user_type = user_selection
-            if password != confirmation:
-                return render(request, "Doc_Appoint/register.html", {
-                    "message": "Passwords entered do not match"
-                })
-            try:
-                user = User.objects.create_user(username, email, password)
+    if not request.user.is_authenticated:
+        if user_selection == 'personal' or user_selection == "doctor":
+            if request.method == "POST":
+                username = request.POST['username']
+                email = request.POST['email']
+                password = request.POST['password']
+                confirmation = request.POST['confirmation']
+                user_type = user_selection
+                if password != confirmation:
+                    return render(request, "Doc_Appoint/register.html", {
+                        "message": "Passwords entered do not match"
+                    })
+                try:
+                    user = User.objects.create_user(username, email, password)
+                    if user_selection == 'doctor':
+                        user.user_type = 'DR'
+                    else:
+                        user.user_type = 'PR'
+                    user.save()
+                except IntegrityError:
+                    return render(request, "Doc_Appoint/register.html", {
+                        "message": "Username already taken"
+                    })
                 if user_selection == 'doctor':
-                    user.user_type = 'DR'
+                    login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                    return HttpResponseRedirect(reverse('next'))
                 else:
-                    user.user_type = 'PR'
-                user.save()
-            except IntegrityError:
-                return render(request, "Doc_Appoint/register.html", {
-                    "message": "Username already taken"
-                })
-            if user_selection == 'doctor':
-                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-                return HttpResponseRedirect(reverse('next'))
+                    login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                    return HttpResponseRedirect(reverse('next-personal'))
             else:
-                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-                return HttpResponseRedirect(reverse('index'))
+                return render(request, "Doc_Appoint/register.html", {})
         else:
-            return render(request, "Doc_Appoint/register.html", {})
+            return HttpResponse("error")
     else:
-        return HttpResponse("error")
+        return HttpResponse("User is signed in, Logout to register as a new user")
 
 def select(request):
     return render(request, "Doc_Appoint/selection.html")
 
-def next_steps(request):
+def next_steps_doc(request):
     if request.user.is_authenticated:
         if request.user.user_type == 'DR':
             if request.method == 'POST':
@@ -108,6 +111,36 @@ def next_steps(request):
             return HttpResponse('Error, user is not a doctor!')
     else:
         return HttpResponse('User not logged in!')
+
+
+def next_steps_personal(request):
+    if request.user.is_authenticated and request.user.user_type == 'PR':
+        if request.method == "POST":
+            patient_id = User.objects.get(id=request.user.id)
+            full_name = request.POST['full_name']
+            dob = request.POST['dob']
+            patient_phone_number = request.POST['phone_number']
+            patient_sex = request.POST['sex']
+
+            try:
+                new_patient = Patient.objects.create(
+                    patient_id=patient_id,
+                    full_name=full_name,
+                    patient_phone_number=patient_phone_number,
+                    patient_dob=dob,
+                    patient_sex=patient_sex
+                )
+                new_patient.save()
+            except IntegrityError:
+                return render(request, "Doc_Appoint/next_steps_personal.html", {
+                    "message": 'Something went wrong'
+                })
+            return HttpResponseRedirect(reverse('index'))
+        else:
+            return render(request, "Doc_Appoint/next_steps_personal.html", {
+            })
+    else:
+        return HttpResponse("User is not logged in a personal account!!")
 
 # Dashboard
 def dashboard_doc(request):
@@ -182,23 +215,27 @@ def search_doctors(query):
 
 
 def time_slots(doc_id):
-    slots = {}   
-    doc = Doctor.objects.get(id=doc_id)
-    t1 = doc.service_time_from.strftime("%H:%M:%S")
-    t2 = doc.service_time_to.strftime("%H:%M:%S")
-    time_from = datetime.strptime(t1, "%H:%M:%S")
-    time_to = datetime.strptime(t2, "%H:%M:%S")
-    diff = time_to - time_from
-    diff_min = diff.seconds / 60
-    diff_hour = diff_min / 60 
-    ts = time_from
-
     ''' 
         creating time slots based on 30 minutes diff
         that is why multiplying by 2 so, we have 2 slots every hour.
         storing those slots in a dict, and every slot has a value of False in the beginning.
         if it gets filled, we'll set it to true.
     '''
+    slots = {}   
+    doc = Doctor.objects.get(id=doc_id)
+    # converts to datetime obj
+    t1 = doc.service_time_from.strftime("%H:%M:%S")
+    t2 = doc.service_time_to.strftime("%H:%M:%S")
+    # converts it to string
+    time_from = datetime.strptime(t1, "%H:%M:%S")
+    time_to = datetime.strptime(t2, "%H:%M:%S")
+    # gets the difference of seconds between the times
+    diff = time_to - time_from
+    # extract seconds from diff to to get minutes and hours
+    diff_min = diff.seconds / 60
+    diff_hour = diff_min / 60 
+    ts = time_from
+
     for i in range(int(diff_hour)*2):
         ts = ts + timedelta(minutes=30)
         slots[ts.time()] = False
@@ -209,10 +246,38 @@ def time_slots(doc_id):
 def book_appointment(request, doc_id):
     doc = Doctor.objects.get(id = doc_id)
     booking_times = time_slots(doc_id)
-    return render(request, "Doc_Appoint/book_appointment.html", {
-        'doc': doc,
-        'booking_times': booking_times
-    })
+    patient = Patient.objects.get(patient_id=request.user.id)
+    error = False
+    if request.method == "POST":
+        appointment_time = request.POST["booking"]
+        appointment_date = request.POST.get("app-date")
+        if datetime.strptime(appointment_date, "%Y-%m-%d") > datetime.now():
+            doc.patient.add(patient)
+        else:
+            HttpResponse('error')
+        # try:
+        #     # new_appointment = Appointment.objects.create(
+        #     #     patient=patient,
+        #     #     doctor=doc,
+        #     #     # appointment_time=datetime.strptime(appointment_time, "%H:%M %p"),
+        #     #     appointment_time=appointment_time,
+        #     #     appointment_date=datetime.strptime(appointment_date, "%Y-%m-%d")
+        #     # )
+        #     new_appointment.save()   
+        # except IntegrityError:
+        #     return render(request, "Doc_Appoint/book_appointment.html", {
+        #         "message": "Username already taken",
+        #         'doc': doc,
+        #         'booking_times': booking_times
+        #     })
+        return HttpResponse('Approved')
+        # return HttpResponseRedirect(reverse('book-appointment'), 'doc_id')
+
+    else:
+        return render(request, "Doc_Appoint/book_appointment.html", {
+            'doc': doc,
+            'booking_times': booking_times
+        })
 
 
 

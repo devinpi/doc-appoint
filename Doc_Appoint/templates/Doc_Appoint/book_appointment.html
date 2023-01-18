@@ -1,6 +1,9 @@
 {% extends "Doc_Appoint/layout.html" %}
 
 {% block body %}
+    {% if message %}
+        {{message}}
+    {% endif %}
     <div class="doc-name">
         <h2 class="lead display-4" style="font-weight: 400">{{doc.doctor_name.username}}</h2>
     </div>
@@ -32,6 +35,7 @@
             <h3 style="font-weight: 500">Book your Appointment</h3>
         </div>
         <form action="" method="POST">
+            {% csrf_token %}
             <div class="form-group">                
                 <label class="control-label" for="booking"><strong>Choose appointment time:</strong></label>
                 <select class="custom-select" name="booking" id="booking">

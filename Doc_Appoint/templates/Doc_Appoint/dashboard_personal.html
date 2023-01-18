@@ -13,6 +13,7 @@
     <div class="dashboard-links-container">
         <a class="dashboard-links lead" href="">Upcoming Appointments</a>
         <a class="dashboard-links lead" href="">History</a>
+        <a class="dashboard-links lead" href="{% url 'next-personal' %}">Change Profile Settings</a>
         <!-- <a class="dashboard-links lead" href="">Change Profile Settings</a> -->
     </div>
     <div class="dashboard-view lead">
@@ -34,10 +35,7 @@
                         </div>
                     </div>
                     <div class="booking-form">
-                        <form action="{% url 'book-appointment' d.id %}" method="POST">
-                            {% csrf_token %}
-                            <input class="booking-btn btn" type="submit" name="booking" value="Book an Appointment">
-                        </form>
+                        <a href="{% url 'book-appointment' d.id %}"><button class="booking-btn btn" type="submit" name="booking">Book an Appointment</button></a>
                     </div>
                 </div>
             {% endfor %}
