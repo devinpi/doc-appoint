@@ -12,4 +12,7 @@ urlpatterns = [
      path("dashboard-doctor", views.dashboard_doc, name="dashboard-doctor"),
      path("dashboard-personal", views.dashboard_personal, name="dashboard-personal"),
      path("book-appointment/<int:doc_id>", views.book_appointment, name="book-appointment"),
+
+     # api routes
+     path("dashboard/<str:appointment>", views.get_appointment, name="appoints")
 ]

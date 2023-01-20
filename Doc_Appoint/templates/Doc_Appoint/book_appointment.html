@@ -2,7 +2,19 @@
 
 {% block body %}
     {% if message %}
-        {{message}}
+        <div class="alert alert-danger">
+            <strong>{{message}}</strong>
+        </div>
+    {% endif %}
+    {% if error %}
+        <div class="alert alert-danger">
+            <strong>Cannot book an appointment with a date in the past</strong>
+        </div>
+    {% endif %}
+    {% if success %}
+        <div class="alert alert-success">
+            <strong>Your Appointment has been booked!</strong>
+        </div>      
     {% endif %}
     <div class="doc-name">
         <h2 class="lead display-4" style="font-weight: 400">{{doc.doctor_name.username}}</h2>
@@ -30,7 +42,7 @@
     </div>
 
     <!-- booking appointment form -->
-    <div class="doc-details">
+    <div class="doc-details" id="appointment-form">
         <div class="doc-book-app">
             <h3 style="font-weight: 500">Book your Appointment</h3>
         </div>
@@ -38,8 +50,8 @@
             {% csrf_token %}
             <div class="form-group">                
                 <label class="control-label" for="booking"><strong>Choose appointment time:</strong></label>
-                <select class="custom-select" name="booking" id="booking">
-                    <option selected>Select time</option>
+                <select class="custom-select" name="booking" id="booking" required>
+                    <option value="" selected>Select time</option>
                     {% for t in booking_times %}
                         <option value="{{t}}">{{t}}</option>
                     {% endfor %}
@@ -47,7 +59,7 @@
             </div>
             <div class="form-group">
                 <label for="app-date"><strong>Select Date:</strong></label>
-                <input class="form-control" type="date" class="" name="app-date">
+                <input class="form-control" type="date" class="" name="app-date" required>
             </div>
             <div class="next-steps-form-buttons">
                 <input class="btn" type="submit" value="Confirm Booking">

@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.db import IntegrityError
+from django.http import JsonResponse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
@@ -86,8 +87,8 @@ def next_steps_doc(request):
                 experience = request.POST['experience']
                 study = request.POST.get('study')
                 phone = request.POST.get('phone_number')
-                service_time_from = request.POST.get('service_time_from')
-                service_time_to = request.POST.get('service_time_to')
+                service_time_from = request.POST.get('from-time')
+                service_time_to = request.POST.get('to-time')
                 address = request.POST.get('address')
                 try:
                     new_doctor = Doctor.objects.create(doctor_name=doc_user,
@@ -213,7 +214,6 @@ def search_doctors(query):
         error = True
         return results, error
 
-
 def time_slots(doc_id):
     ''' 
         creating time slots based on 30 minutes diff
@@ -248,104 +248,85 @@ def book_appointment(request, doc_id):
     booking_times = time_slots(doc_id)
     patient = Patient.objects.get(patient_id=request.user.id)
     error = False
+    success=False
     if request.method == "POST":
         appointment_time = request.POST["booking"]
         appointment_date = request.POST.get("app-date")
         if datetime.strptime(appointment_date, "%Y-%m-%d") > datetime.now():
             doc.patient.add(patient)
+            try:
+                new_appointment = Appointment.objects.create(
+                    patient=patient,
+                    doctor=doc,
+                    appointment_time=appointment_time,
+                    appointment_date=datetime.strptime(appointment_date, "%Y-%m-%d")
+                )
+                new_appointment.save()
+                success=True   
+            except IntegrityError:
+                return render(request, "Doc_Appoint/book_appointment.html", {
+                    'message': "Some error occured, could not book an appointment!",
+                    'doc': doc,
+                    'booking_times': booking_times
+                })
         else:
-            HttpResponse('error')
-        # try:
-        #     # new_appointment = Appointment.objects.create(
-        #     #     patient=patient,
-        #     #     doctor=doc,
-        #     #     # appointment_time=datetime.strptime(appointment_time, "%H:%M %p"),
-        #     #     appointment_time=appointment_time,
-        #     #     appointment_date=datetime.strptime(appointment_date, "%Y-%m-%d")
-        #     # )
-        #     new_appointment.save()   
-        # except IntegrityError:
-        #     return render(request, "Doc_Appoint/book_appointment.html", {
-        #         "message": "Username already taken",
-        #         'doc': doc,
-        #         'booking_times': booking_times
-        #     })
-        return HttpResponse('Approved')
-        # return HttpResponseRedirect(reverse('book-appointment'), 'doc_id')
-
+            error = True
+        # return HttpResponse('Approved')
+        return render(request, "Doc_Appoint/book_appointment.html", {
+            'doc': doc,
+            'booking_times': booking_times,
+            'error': error,
+            'success': success
+        })
     else:
         return render(request, "Doc_Appoint/book_appointment.html", {
             'doc': doc,
             'booking_times': booking_times
         })
 
+def get_appointment(request, appointment):
+    if request.user.user_type == 'PR':
+        try:
+            p = Patient.objects.get(patient_id=request.user.id)
+        except Patient.DoesNotExist:
+            return JsonResponse({"error": "nothing found"}, status=404)
 
 
+        if appointment == "upcoming-appointments":
+            appoints = Appointment.objects.filter(
+                patient=p,
+                appointment_date__gte=datetime.now()
+            )
+        elif appointment == "history-appointments":
+                
+            appoints = Appointment.objects.filter(
+                patient=p,
+                appointment_date__lt=datetime.now()
+            )
+        else:
+            return JsonResponse({"error": "Invalid value"}, status=400)
+
+        return JsonResponse([appoint.serialize() for appoint in appoints], safe=False)
+    else:
+        try:
+            d = Doctor.objects.get(doctor_name=request.user.id)
+        except Doctor.DoesNotExist:
+            return JsonResponse({"error": "nothing found"}, status=404)
 
 
+        if appointment == "upcoming-appointments":
+            appoints = Appointment.objects.filter(
+                doctor=d,
+                appointment_date__gte=datetime.now()
+            )
+        elif appointment == "history-appointments":
+                
+            appoints = Appointment.objects.filter(
+                doctor=d,
+                appointment_date__lt=datetime.now()
+            )
+        else:
+            return JsonResponse({"error": "Invalid value"}, status=400)
 
+        return JsonResponse([appoint.serialize() for appoint in appoints], safe=False)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # search
-    # for n in doc_names:
-    #     if query.lower() in n.lower():
-    #         if query.lower() == n.lower():
-    #             doc_name_filter = Doctor.objects.filter(doc.doctor_name.username)
-    #             found_name = True
-    #         else:
-    #             sub_query_name.append(n)
-    #         found_name = True
-    # if not found_name:
-    #     error_name = True
-    #     found_name = False
-        
-    # for s in doc_services:
-    #     if query.lower() in s.lower():
-    #         if query.lower() == s.lower():
-    #             return HttpResponse('found', query)
-    #         else:
-    #             sub_query_service.append(s)
-    #         found_service = True
-    # if not found_service:
-    #     error_service = True
-
-    # return found_name, query
-
-# def search(request):
-#     # searches for the enteries based on the string entered in the search box. Returns a list of the matched enteries if a substring is entered.
-#     # If a string is entered and it fully matches the value in the enteries folder, it redirects to the entry page for that entry.
-#     query = request.GET.get("q")
-#     sub=[]
-#     # Setting the flags to false so if a certain condition is met, they are set to true.
-#     error=False
-#     found=False
-#     for st in util.list_entries():   
-#         if query.lower() in st.lower():
-#             if query.lower() == st.lower():
-#                 return redirect("entryPage", title=query)
-#             else:
-#                 sub.append(st) # add to the sub list when an entry is found based on the search(a sub string and not a whole string)
-#             found = True   
-#     if not found:
-#         error = "True"
-#     return render(request, "encyclopedia/search.html",{
-#         "query": query,
-#         "sub": sub,
-#         "error": error
-#     })

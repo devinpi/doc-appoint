@@ -1,19 +1,19 @@
 {% extends "Doc_Appoint/layout.html" %}
+{% load static %}
 
 {% block body %}
 
 <div class="search-container">
     <form method="POST" action="">
         {% csrf_token %}
-        <input class="search-box" type="text" name='q' placeholder="Search for doctors (by name or speciality)...">
+        <input class="search-box" type="text" name='q' placeholder="Search for doctors by name or specialities...">
         <input class="btn btn-primary" type="submit" value="Search" name="search">
     </form>
 </div>
 <div class="dashboard-container">
     <div class="dashboard-links-container">
-        <a class="dashboard-links lead" href="">Upcoming Appointments</a>
-        <a class="dashboard-links lead" href="">History</a>
-        <a class="dashboard-links lead" href="{% url 'next-personal' %}">Change Profile Settings</a>
+        <p id="upcoming-appointments" class="dashboard-links lead">Upcoming Appointments</p>
+        <p id="history-appointments" class="dashboard-links lead">History</p>
         <!-- <a class="dashboard-links lead" href="">Change Profile Settings</a> -->
     </div>
     <div class="dashboard-view lead">
@@ -35,7 +35,7 @@
                         </div>
                     </div>
                     <div class="booking-form">
-                        <a href="{% url 'book-appointment' d.id %}"><button class="booking-btn btn" type="submit" name="booking">Book an Appointment</button></a>
+                        <a href="{% url 'book-appointment' d.id %}"><button class="booking-btn btn" value="Book an Appointment">Book an Appointment</button></a>
                     </div>
                 </div>
             {% endfor %}
@@ -45,6 +45,9 @@
             </div>
         {% endif %}
     </div>
-
 </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'Doc_Appoint/index.js' %}"></script>
 {% endblock %}

@@ -2,6 +2,11 @@
 {% load socialaccount %}
 
 {% block body %}
+    {% if message %}
+        <div class="alert alert-danger">
+            <strong>{{message}}</strong>
+        </div>
+    {% endif %}
     <div class="login-wrapper">
         <div class="login-container">
             <div>

@@ -19,11 +19,15 @@ class Patient(models.Model):
     def __str__(self):
         return f"{self.patient_id} | {self.full_name} | {self.patient_dob} | {self.patient_sex}"
 
+    def serialize(self):
+        return {
+            # "id": self.id,
+            "patient_id": self.patient_id.id,
+            # "full_name": self.full_name,
+            # "patient_dob": self.patient_dob
+        }
+
 class Doctor(models.Model):
-    DOCTOR_GENDER = (
-        ('M', 'male'),
-        ('F', 'female')
-    )
     doctor_name = models.ForeignKey('User', on_delete=models.CASCADE, related_name="doctor_name")
     services = models.TextField(max_length=100)
     experience = models.IntegerField()
@@ -33,7 +37,7 @@ class Doctor(models.Model):
     service_time_to = models.TimeField(null=True)
     address = models.TextField()
     phone_number = models.CharField(max_length=14, blank=True, null=True)
-    gender = models.CharField(max_length=1, blank=True, choices=DOCTOR_GENDER)
+    gender = models.CharField(max_length=10, blank=True, null=True)
     def __str__(self):
         return f"{self.id} | {self.services} | {self.experience} | {self.patient} | {self.address}"
 
@@ -57,4 +61,14 @@ class Appointment(models.Model):
     def __str__(self):
         return f"{self.patient} | {self.doctor} | {self.appointment_time} | {self.appointment_date}"
 
+    def serialize(self):
+        return {
+            # "id": self.id,
+            "patient": self.patient.patient_id.id,
+            "doctor": self.doctor.doctor_name.id,
+            "appointment_time": self.appointment_time,
+            "appointment_date": self.appointment_date.strftime("%Y-%m-%d"),
+        }
+
+# note: cannot serialize python objects in json. need to change them
 
