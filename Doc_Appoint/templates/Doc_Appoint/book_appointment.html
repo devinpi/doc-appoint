@@ -41,6 +41,7 @@
         </div>
     </div>
 
+    {% if not exists %}
     <!-- booking appointment form -->
     <div class="doc-details" id="appointment-form">
         <div class="doc-book-app">
@@ -67,4 +68,9 @@
             </div>
         </form>
     </div>
+    {% else %}
+        <div class="alert alert-success">
+            <strong>Your appointment has been confirmed for {{exists.appointment_date}} at {{exists.appointment_time}}</strong>
+        </div> 
+    {% endif %}
 {% endblock %}

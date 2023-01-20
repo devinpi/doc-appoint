@@ -12,38 +12,43 @@
 </div>
 <div class="dashboard-container">
     <div class="dashboard-links-container">
-        <p id="upcoming-appointments" class="dashboard-links lead">Upcoming Appointments</p>
-        <p id="history-appointments" class="dashboard-links lead">History</p>
+        <p id="upcoming-appointments" class="dashboard-links lead"><strong>Upcoming Appointments</strong></p>
+        <p id="history-appointments" class="dashboard-links lead"><strong>History</strong></p>
         <!-- <a class="dashboard-links lead" href="">Change Profile Settings</a> -->
     </div>
-    <div class="dashboard-view lead">
-        {% if not err %}
-            {% for d in doc_name %}
-                <div class="search-results">
-                    <div>
-                        <div class="info">
-                            <span class=""><strong>Name:</strong> </span>{{d.doctor_name.username}}
+    <div class="dashboard-view lead" id="dashboard-view">
+        <div id="search-results">
+            {% if not err %}
+                {% for d in doc_name %}
+                    <div class="search-results" id="">
+                        <div>
+                            <div class="info">
+                                <span class=""><strong>Name:</strong> </span>{{d.doctor_name.username}}
+                            </div>
+                            <div class="info">
+                                <span class=""><strong>Location: </strong></span>{{d.address}}
+                            </div>
+                            <div class="info">
+                                <span class=""><strong>Phone: </strong> </span>{{d.phone_number}}
+                            </div>
+                            <div class="info">
+                                <span class=""><strong>Services:</strong> </span>{{d.services}}
+                            </div>
                         </div>
-                        <div class="info">
-                            <span class=""><strong>Location: </strong></span>{{d.address}}
-                        </div>
-                        <div class="info">
-                            <span class=""><strong>Phone: </strong> </span>{{d.phone_number}}
-                        </div>
-                        <div class="info">
-                            <span class=""><strong>Services:</strong> </span>{{d.services}}
+                        <div class="booking-form">
+                            <a href="{% url 'book-appointment' d.id %}"><button class="booking-btn btn" value="Book an Appointment">Book an Appointment</button></a>
                         </div>
                     </div>
-                    <div class="booking-form">
-                        <a href="{% url 'book-appointment' d.id %}"><button class="booking-btn btn" value="Book an Appointment">Book an Appointment</button></a>
-                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-danger">
+                    <strong>No values Found</strong>
                 </div>
-            {% endfor %}
-        {% else %}
-            <div class="alert alert-danger">
-                <strong>No values Found</strong>
-            </div>
-        {% endif %}
+            {% endif %}
+        </div>
+        <div id="spa-results">
+            <div id="spa-heading"></div>
+        </div>
     </div>
 </div>
 {% endblock %}

@@ -55,7 +55,7 @@ class Report(models.Model):
 class Appointment(models.Model):
     patient = models.ForeignKey('Patient', on_delete=models.CASCADE, related_name="appoint_patient_name")
     doctor = models.ForeignKey('Doctor', on_delete=models.CASCADE, related_name="appoint_doctor_name")
-    appointment_time = models.CharField(max_length=7, null=True)
+    appointment_time = models.CharField(max_length=10, null=True)
     appointment_date = models.DateField(null=True)
 
     def __str__(self):
@@ -64,8 +64,9 @@ class Appointment(models.Model):
     def serialize(self):
         return {
             # "id": self.id,
-            "patient": self.patient.patient_id.id,
-            "doctor": self.doctor.doctor_name.id,
+            # "patient": self.patient.patient_id.id,
+            "patient": self.patient.full_name,
+            "doctor": self.doctor.doctor_name.username,
             "appointment_time": self.appointment_time,
             "appointment_date": self.appointment_date.strftime("%Y-%m-%d"),
         }

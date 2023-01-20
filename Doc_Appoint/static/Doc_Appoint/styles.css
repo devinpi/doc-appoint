@@ -131,8 +131,6 @@ footer a>img, footer p {
     text-align: center;
 }
 
-
-
 /* Next-Steps Form */
 .next-steps-container {
     display: flex;
@@ -207,6 +205,10 @@ footer a>img, footer p {
     color:rgb(47, 47, 47)
 }
 
+.dashboard-links:hover{
+    cursor: pointer;
+}
+
 .dashboard-view{
     flex-grow: 2;
     margin: 15px;
@@ -229,7 +231,7 @@ footer a>img, footer p {
 }
 
 .search-results:nth-child(odd) {
-    background-color: #c1dde5;
+    background-color: #e7f6fb;
 }
 
 .booking-form{
@@ -237,7 +239,8 @@ footer a>img, footer p {
 }
 
 .booking-btn{
-    background-color: #eaac69;
+    background-color: var(--main-theme-button);
+    color: white;
 }
 
 .info {

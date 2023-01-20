@@ -249,6 +249,12 @@ def book_appointment(request, doc_id):
     patient = Patient.objects.get(patient_id=request.user.id)
     error = False
     success=False
+
+    if Appointment.objects.filter(patient=patient, doctor=doc, appointment_date__gte = datetime.now()).exists():
+        patient_appoint_exists = Appointment.objects.get(patient=patient, doctor=doc, appointment_date__gte = datetime.now())
+    else:
+        patient_appoint_exists = False
+        
     if request.method == "POST":
         appointment_time = request.POST["booking"]
         appointment_date = request.POST.get("app-date")
@@ -281,7 +287,8 @@ def book_appointment(request, doc_id):
     else:
         return render(request, "Doc_Appoint/book_appointment.html", {
             'doc': doc,
-            'booking_times': booking_times
+            'booking_times': booking_times,
+            'exists': patient_appoint_exists
         })
 
 def get_appointment(request, appointment):
@@ -291,14 +298,12 @@ def get_appointment(request, appointment):
         except Patient.DoesNotExist:
             return JsonResponse({"error": "nothing found"}, status=404)
 
-
         if appointment == "upcoming-appointments":
             appoints = Appointment.objects.filter(
                 patient=p,
                 appointment_date__gte=datetime.now()
             )
         elif appointment == "history-appointments":
-                
             appoints = Appointment.objects.filter(
                 patient=p,
                 appointment_date__lt=datetime.now()
@@ -313,20 +318,17 @@ def get_appointment(request, appointment):
         except Doctor.DoesNotExist:
             return JsonResponse({"error": "nothing found"}, status=404)
 
-
         if appointment == "upcoming-appointments":
             appoints = Appointment.objects.filter(
                 doctor=d,
                 appointment_date__gte=datetime.now()
             )
         elif appointment == "history-appointments":
-                
             appoints = Appointment.objects.filter(
                 doctor=d,
                 appointment_date__lt=datetime.now()
             )
         else:
             return JsonResponse({"error": "Invalid value"}, status=400)
-
         return JsonResponse([appoint.serialize() for appoint in appoints], safe=False)
 
