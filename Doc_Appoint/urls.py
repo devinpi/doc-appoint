@@ -14,5 +14,6 @@ urlpatterns = [
      path("book-appointment/<int:doc_id>", views.book_appointment, name="book-appointment"),
 
      # api routes
-     path("dashboard/<str:appointment>", views.get_appointment, name="appoints")
+     path("dashboard/<str:appointment>", views.get_appointment, name="appoints"),
+     path("appointments/<int:doc_id>/<str:selected_date>", views.check_appointment_time, name="check_time")
 ]

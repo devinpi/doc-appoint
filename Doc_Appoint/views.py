@@ -291,6 +291,8 @@ def book_appointment(request, doc_id):
             'exists': patient_appoint_exists
         })
 
+
+# api for fetching appointment based on date
 def get_appointment(request, appointment):
     if request.user.user_type == 'PR':
         try:
@@ -331,4 +333,20 @@ def get_appointment(request, appointment):
         else:
             return JsonResponse({"error": "Invalid value"}, status=400)
         return JsonResponse([appoint.serialize() for appoint in appoints], safe=False)
+
+
+def check_appointment_time(request, doc_id, selected_date):
+    doc = Doctor.objects.get(id=doc_id)
+    # d = datetime.strptime(selected_date, "%Y-%m-%d")
+    try:
+        appointments_for_date = Appointment.objects.filter(doctor=doc, appointment_date=d)
+    except Appointment.DoesNotExist:
+        return JsonResponse({'error': "Does not exist"}, status=400)
+
+    # return JsonResponse({"worked": "worked"})
+    return JsonResponse([ap.serialize() for ap in appointments_for_date], safe=False)
+
+
+
+
 
