@@ -1,0 +1,34 @@
+{% extends "Doc_Appoint/layout.html" %}
+
+{% block body %}
+<div class="doc-name">
+    <h2 class="lead display-4" style="font-weight: 400">{{patient.patient_id.username}}</h2>
+</div>
+<div class="doc-details-container">
+    <div class="doc-details">
+        <div class="details-bg">
+            <h3 style="font-weight: 500">Details</h3>
+            <div><strong>Id: </strong><span id="doctor_id">{{patient.id}}</span></div>
+            <div><strong>Full name: </strong>{{patient.full_name}}</div>
+            <div><strong>Gender: </strong>{{patient.patient_sex}}</div>
+            <div class="info"><strong>Date of Birth: </strong>{{patient.patient_dob}}</div>
+            <div class="info"><strong>Phone: </strong>{{patient.patient_phone_number}}</div>
+        </div>
+    </div>
+</div>
+<div class="doc-details" id="appointment-form">
+    <div class="doc-book-app">
+        <h3 style="font-weight: 500">Edit Report</h3>
+    </div>
+    <div>
+        <form method="POST" action="">
+            {% csrf_token %}
+            <textarea class="form-control" rows="15" id="edited_report" name="edited_report">{{report.written_report}}</textarea><br>
+            <div class="next-steps-form-buttons">
+                <input class="btn" type="submit" value="Save">
+                <input class="btn" type="reset" value="Reset">
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

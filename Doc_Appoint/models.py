@@ -44,17 +44,22 @@ class Doctor(models.Model):
 class Report(models.Model):
     patient = models.ForeignKey('Patient', on_delete=models.CASCADE, related_name="report_of_patient")
     doctor = models.ForeignKey('Doctor', on_delete=models.CASCADE, related_name="report_by_doctor")
-    medication = models.TextField(blank=True)
-    written_report = models.TextField(blank=True) 
-    created_at = models.DateTimeField(auto_now_add=True) 
-    
+    written_report = models.TextField(blank=True, null=True) 
+
     def __str__(self):
-        return f"{self.patient} | {self.doctor} | "
+        return f"{self.id} | {self.patient} | {self.doctor} | "
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "written_report": self.written_report
+        }
 
 
 class Appointment(models.Model):
     patient = models.ForeignKey('Patient', on_delete=models.CASCADE, related_name="appoint_patient_name")
     doctor = models.ForeignKey('Doctor', on_delete=models.CASCADE, related_name="appoint_doctor_name")
+    report = models.ForeignKey('Report', null=True, blank=True, on_delete=models.CASCADE, related_name="patient_report_by_appointment")
     appointment_time = models.CharField(max_length=10, null=True)
     appointment_date = models.DateField(null=True)
 
@@ -63,10 +68,11 @@ class Appointment(models.Model):
 
     def serialize(self):
         return {
-            # "id": self.id,
+            "id": self.id,
             # "patient": self.patient.patient_id.id,
             "patient": self.patient.full_name,
             "doctor": self.doctor.doctor_name.username,
+            "report": self.report.written_report,
             "appointment_time": self.appointment_time,
             "appointment_date": self.appointment_date.strftime("%Y-%m-%d"),
         }

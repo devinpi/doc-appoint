@@ -1,32 +1,59 @@
 {% extends "Doc_Appoint/layout.html" %}
+{% load static %}
 
 {% block body %}
 
 <div class="search-container">
-    <form action="" method="POST">
+    <form method="POST" action="">
+        {% csrf_token %}
         <input class="search-box" type="text" name='q' placeholder="Search for patients...">
-        <input class="btn btn-primary" type="submit" value="Search">
+        <input class="btn btn-primary" type="submit" value="Search" name="search">
     </form>
 </div>
 <div class="dashboard-container">
     <div class="dashboard-links-container">
-        <a class="dashboard-links lead" href="">Upcoming Appointments</a>
-        <a class="dashboard-links lead" href="">History</a>
-        <a class="dashboard-links lead" href="{% url 'next' %}">Change Profile Settings</a>
+        <p id="upcoming-appointments" class="dashboard-links lead"><strong>Today's and upcoming appointments</strong></p>
+        <p id="history-appointments" class="dashboard-links lead"><strong>History</strong></p>
+        <!-- <a class="dashboard-links lead" href="">Change Profile Settings</a> -->
     </div>
-    <div class="dashboard-view">
-
+    <div class="dashboard-view lead" id="dashboard-view">
+        <div id="search-results">
+            {% if not err %}
+                {% for patient in patients %}
+                    <div class="search-results" id="">
+                        <div>
+                            <div class="info">
+                                <span class=""><strong>Name:</strong> </span>{{patient.full_name}}
+                            </div>
+                            <div class="info">
+                                <span class=""><strong>DOB: </strong></span>{{patient.patient_dob}}
+                            </div>
+                            <div class="info">
+                                <span class=""><strong>Phone: </strong> </span>{{patient.patient_phone_number}}
+                            </div>
+                            <div class="info">
+                                <span class=""><strong>Gender:</strong> </span>{{patient.patient_sex}}
+                            </div>
+                        </div>
+                        <div class="booking-form">
+                            <a href="{% url 'patient_report' patient.id %}"><button class="booking-btn btn" value="Patient-Report">Patient Report</button></a>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-danger">
+                    <strong>No values Found</strong>
+                </div>
+            {% endif %}
+        </div>
+        <div id="spa-results">
+            <div id="spa-heading"></div>
+            <div id="appoint-report"></div>
+        </div>
     </div>
-
 </div>
 {% endblock %}
-{% block footer %}
-    <footer>
-        <a href="{% url 'index' %}">
-        <img src="./static/Doc_Appoint/Doc Appoint_logo_v2.png" width="30" height="30" alt="doc_appoint_logo">
-        </a>
-        <div>
-        <p>© Doc Appoint, 2022</p>
-        </div>
-    </footer>
+
+{% block script %}
+    <script src="{% static 'Doc_Appoint/index.js' %}"></script>
 {% endblock %}

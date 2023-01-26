@@ -40,6 +40,14 @@
     margin: 10px;
 }
 
+
+.existing-times{
+    background-color: #e7f6fb;
+    border-radius: 5px;
+    padding: 5px;
+    margin-right: 5px;
+}
+
 /* .slots-container{
     display: flex;
     flex-direction: row;

@@ -44,32 +44,37 @@
     </div>
 
     {% if not exists %}
-    <!-- booking appointment form -->
-    <div class="doc-details" id="appointment-form">
-        <div class="doc-book-app">
-            <h3 style="font-weight: 500">Book your Appointment</h3>
+        <!-- booking appointment form -->
+        <div class="doc-details" id="appointment-form">
+            <div class="doc-book-app">
+                <h3 style="font-weight: 500">Book your Appointment</h3>
+            </div>
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="app-date"><strong>Select Date:</strong></label>
+                    <input id="select-date" class="form-control" type="date" name="app-date" required>
+                </div>
+                <div id="existing">
+                    <div>
+                        Existing appointments for this date are:
+                    </div>
+                </div>
+                <div class="form-group">                
+                    <label class="control-label" for="booking"><strong>Choose appointment time:</strong></label>
+                    <select class="custom-select" name="booking" id="booking-times" required>
+                        <option value="" selected>Select time</option>
+                        {% for t in booking_times %}
+                            <option value="{{t}}">{{t}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="next-steps-form-buttons">
+                    <input class="btn" type="submit" value="Confirm Booking">
+                    <input class="btn" type="reset" value="Reset">
+                </div>
+            </form>
         </div>
-        <form action="" method="POST">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="app-date"><strong>Select Date:</strong></label>
-                <input id="select-date" class="form-control" type="date" name="app-date" required>
-            </div>
-            <div class="form-group">                
-                <label class="control-label" for="booking"><strong>Choose appointment time:</strong></label>
-                <select class="custom-select" name="booking" id="booking" required>
-                    <option value="" selected>Select time</option>
-                    {% for t in booking_times %}
-                        <option value="{{t}}">{{t}}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="next-steps-form-buttons">
-                <input class="btn" type="submit" value="Confirm Booking">
-                <input class="btn" type="reset" value="Reset">
-            </div>
-        </form>
-    </div>
     {% else %}
         <div class="alert alert-success">
             <strong>Your appointment has been confirmed for {{exists.appointment_date}} at {{exists.appointment_time}}</strong>

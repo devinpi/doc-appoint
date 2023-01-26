@@ -45,7 +45,8 @@ function get_appointment_values(appointment){
         appointments.forEach(appointment => {
             let element = document.createElement('div');
             element.setAttribute("class", "element");
-            element.id = appointment.id;
+            element.setAttribute('id', `${appointment.id}`)
+            // element.id = appointment.id;
             appoint_container = `
                 <div class="search-results">
                     <div class="info">
@@ -63,15 +64,45 @@ function get_appointment_values(appointment){
                 </div>
             `
             element.innerHTML = appoint_container;
-            // document.querySelector('#dashboard-view').appendChild(element);
+            element.addEventListener('click', function() {
+                // console.log(appointment.report);
+                    if (appointment.report !== null ){
+                        let report_element = document.createElement('div');
+                        report_element.setAttribute("class", "element");
+                        report_element.id = `report-${appointment.id}`
+                        report_container = `
+                            <div>
+                                <div class="report-result">
+                                    <div class="info">
+                                        <span class=""><strong>Report for </strong> ${appointment.patient}</span>
+                                    </div>
+                                    <div class="info">
+                                        <span class=""><strong>Doctor's Name: </strong></span>${appointment.doctor}
+                                    </div>
+                                    <div class="info">
+                                        <span class=""><strong>Appointment Date: </strong> </span>${appointment.appointment_date}
+                                    </div>
+                                    <div class="info">
+                                        <span class=""><strong>Time: </strong> </span>${appointment.appointment_time}
+                                    </div>
+                                    <div class="">
+                                        <textarea class="form-control" rows="3" readonly>${appointment.report}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        `
+                        element.innerHTML = report_container;
+                    }
+                    else {
+                        alert("No reports found!");
+                    }
+                })
             document.querySelector('#spa-results').appendChild(element);
         });
-        console.log(appointments);   
+        // console.log(appointments);   
     })
     .catch(e => console.log(e))
     document.querySelector('#spa-results').innerHTML='';
 }
-
-
 
 

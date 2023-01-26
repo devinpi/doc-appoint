@@ -1,16 +1,14 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log('booking appointment')
-
     let today = formatDate(new Date());
     let selected_date = document.querySelector('#select-date');
     selected_date.value = today; 
     let doc_id = document.querySelector('#doctor_id').innerHTML;
+    document.querySelector('#existing').style.display = 'none';
 
-    console.log(doc_id);
-    // console.log(document.querySelector('#select-date').value);
-    
+    show_times(doc_id, selected_date.value);
+
     selected_date.addEventListener('change', function() {
-        console.log(selected_date.value)
         show_times(doc_id, selected_date.value);
     });
 });
@@ -29,13 +27,38 @@ function formatDate(date_value) {
     return [year, month, day].join('-');
 }
 
-
 function show_times(doc_id, selected_date) {
     fetch(`appointments/${doc_id}/${selected_date}`)
     .then(response => response.json())
     .then(times => {
-        console.log(times);
+        times.forEach(time => {
+            // console.log("time:", time);
+            // let t = values;
+            // const select_values = [...t];
+            // const s = select_values.map(options => options.value);
+            // console.log(s);
+            
+            // for (let i=0; i < s.length; i++) {
+                //     if(s[i] === time.appointment_time) {
+                    //         t[i].text = time.appointment_time + "Booked";
+                    //     }
+                    // }
+            document.querySelector('#existing').style.display = 'block';
+            let times_container = document.createElement('div');
+            times_container.setAttribute("class", "element");
+            times_container.setAttribute('id', `${doc_id - time.appointment_time}`)
+            
+            app = `
+                    <div class="existing-appointments">
+                        <span class="existing-times">${time.appointment_time}</span>
+                    </div>
+                        <br>
+            `
+            times_container.innerHTML = app;
+            document.querySelector('#existing').appendChild(times_container);
+        })
     })
+
 }
 
  

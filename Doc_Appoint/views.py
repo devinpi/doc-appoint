@@ -147,7 +147,16 @@ def next_steps_personal(request):
 def dashboard_doc(request):
     if request.user.is_authenticated:
         if request.user.user_type == 'DR':
-            return render(request, "Doc_Appoint/dashboard_doc.html", {})
+            if request.method == 'POST':
+                query = request.POST.get('q')
+                patients, err = search_patients(request, query)
+                return render(request, "Doc_Appoint/dashboard_doc.html", {
+                    'patients': patients,
+                    'err': err
+                })
+            else:
+                return render(request, "Doc_Appoint/dashboard_doc.html", {
+                })
         else:
             return HttpResponse('This is not a doctor\'s account')
     else:
@@ -177,7 +186,27 @@ def dashboard_personal(request):
         return HttpResponse("User not logged in!")
 
 def search_patients(request, query):
-    pass
+    u = User.objects.get(id=request.user.id)
+    doc = Doctor.objects.get(doctor_name=u.id)
+    patients = doc.patient.all()
+    results = []
+    found = False
+    error = False
+    if len(query) != 0:
+        for patient_name in patients:
+            if query.lower() in patient_name.full_name.lower():
+                if query.lower() == patient_name.full_name.lower():
+                    results.append(patient_name)
+                else:
+                    results.append(patient_name)
+                found = True
+        if not found:
+            error = True
+        return results, error
+    else:
+        error = True
+        return results, error
+    
 
 def search_doctors(query):
     doc = Doctor.objects.all()
@@ -198,14 +227,6 @@ def search_doctors(query):
                     u_id_sub = User.objects.get(username=name.doctor_name.username)
                     doc_name_get_sub = Doctor.objects.get(doctor_name = u_id_sub)
                     results.append(doc_name_get_sub)
-                    # return results, error
-                # if query.lower() == name.services.lower():
-                #     doc_service = Doctor.objects.filter(services=name.services)
-                #     results.append(doc_service)
-                    # return results, error
-                # else:
-                #     results.append(name)
-                    # return results, error
                 found = True
         if not found:
             error = True
@@ -251,33 +272,42 @@ def book_appointment(request, doc_id):
     success=False
 
     if Appointment.objects.filter(patient=patient, doctor=doc, appointment_date__gte = datetime.now()).exists():
-        patient_appoint_exists = Appointment.objects.get(patient=patient, doctor=doc, appointment_date__gte = datetime.now())
+        patient_appoint_exists = Appointment.objects.get(patient=patient, doctor=doc, appointment_date__gte = datetime.now(), appointment_time__gte=datetime.now())
     else:
         patient_appoint_exists = False
+    
         
     if request.method == "POST":
         appointment_time = request.POST["booking"]
         appointment_date = request.POST.get("app-date")
-        if datetime.strptime(appointment_date, "%Y-%m-%d") > datetime.now():
-            doc.patient.add(patient)
-            try:
-                new_appointment = Appointment.objects.create(
-                    patient=patient,
-                    doctor=doc,
-                    appointment_time=appointment_time,
-                    appointment_date=datetime.strptime(appointment_date, "%Y-%m-%d")
-                )
-                new_appointment.save()
-                success=True   
-            except IntegrityError:
-                return render(request, "Doc_Appoint/book_appointment.html", {
-                    'message': "Some error occured, could not book an appointment!",
-                    'doc': doc,
-                    'booking_times': booking_times
-                })
+        
+        if Appointment.objects.filter(doctor=doc, appointment_date=appointment_date, appointment_time=appointment_time).exists():
+            return HttpResponse('Appointment for this time already exists!')
         else:
-            error = True
-        # return HttpResponse('Approved')
+            if datetime.strptime(appointment_date, "%Y-%m-%d") >= datetime.now():
+                report = Report.objects.create(
+                    patient=patient,
+                    doctor=doc
+                )
+                doc.patient.add(patient)
+                try:
+                    new_appointment = Appointment.objects.create(
+                        patient=patient,
+                        doctor=doc,
+                        report=report,
+                        appointment_time=appointment_time,
+                        appointment_date=datetime.strptime(appointment_date, "%Y-%m-%d")
+                    )
+                    new_appointment.save()
+                    success=True   
+                except IntegrityError:
+                    return render(request, "Doc_Appoint/book_appointment.html", {
+                        'message': "Some error occured, could not book an appointment!",
+                        'doc': doc,
+                        'booking_times': booking_times
+                    })
+            else:
+                error = True
         return render(request, "Doc_Appoint/book_appointment.html", {
             'doc': doc,
             'booking_times': booking_times,
@@ -290,6 +320,23 @@ def book_appointment(request, doc_id):
             'booking_times': booking_times,
             'exists': patient_appoint_exists
         })
+
+@login_required
+def patient_report(request, p_id):
+    patient = Patient.objects.get(id=p_id)
+    report = Report.objects.get(patient=patient)
+    if request.method == 'POST':
+        edited_report = request.POST['edited_report']
+
+        report.written_report = edited_report
+        report.save()
+        return HttpResponseRedirect(reverse('dashboard-doctor'))
+    else:
+        return render(request, "Doc_Appoint/patient_report.html", {
+            "patient": patient,
+            "report": report,
+        })
+
 
 
 # api for fetching appointment based on date
@@ -334,18 +381,27 @@ def get_appointment(request, appointment):
             return JsonResponse({"error": "Invalid value"}, status=400)
         return JsonResponse([appoint.serialize() for appoint in appoints], safe=False)
 
-
+# api for checking if the appointment time is booked or not
 def check_appointment_time(request, doc_id, selected_date):
     doc = Doctor.objects.get(id=doc_id)
-    # d = datetime.strptime(selected_date, "%Y-%m-%d")
+    d = datetime.strptime(selected_date, "%Y-%m-%d")
+    # booking_times = time_slots(doc)
     try:
         appointments_for_date = Appointment.objects.filter(doctor=doc, appointment_date=d)
     except Appointment.DoesNotExist:
         return JsonResponse({'error': "Does not exist"}, status=400)
 
-    # return JsonResponse({"worked": "worked"})
-    return JsonResponse([ap.serialize() for ap in appointments_for_date], safe=False)
+    return JsonResponse([times.serialize() for times in appointments_for_date], safe=False)
 
+# api for showing report for an appointment
+def appointment_report(request, app_id):
+    # try:
+    #     appointment = Appointment.objects.get(id=app_id)
+    # except Appointment.DoesNotExist:
+    #     return JsonResponse({"error": "appointment does not exist"}, status=400)
+
+    # return JsonResponse({'report': appointment.serialize()}, safe=False)
+    pass
 
 
 
