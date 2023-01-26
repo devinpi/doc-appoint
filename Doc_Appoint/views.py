@@ -272,7 +272,7 @@ def book_appointment(request, doc_id):
     success=False
 
     if Appointment.objects.filter(patient=patient, doctor=doc, appointment_date__gte = datetime.now()).exists():
-        patient_appoint_exists = Appointment.objects.get(patient=patient, doctor=doc, appointment_date__gte = datetime.now(), appointment_time__gte=datetime.now())
+        patient_appoint_exists = Appointment.objects.get(patient=patient, doctor=doc, appointment_date__gte = datetime.now())
     else:
         patient_appoint_exists = False
     

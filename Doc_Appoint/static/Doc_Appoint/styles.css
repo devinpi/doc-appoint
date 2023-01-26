@@ -42,8 +42,20 @@
     max-height: 500px;
 }
 
+.working-container-img {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
 #hero-heading{
     font-size: 75px;
+}
+
+#created{
+    font-style: italic;
+    color:#d0d0d0
 }
 
 footer {
@@ -253,6 +265,11 @@ footer a>img, footer p {
 
 
 @media(max-width: 820px){
+    .working {
+        max-height: 500px;
+        max-width: 500px;
+        margin: 0 10px 0 10px;
+    }
     .hero {
         position: relative;
     }

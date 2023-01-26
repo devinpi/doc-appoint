@@ -1,50 +1,55 @@
 {% extends "Doc_Appoint/layout.html" %} 
 
 {% block body %}
-<div class="hero">
-  <div class="hero-heading-container">
-    <div>
-      <h1 id="hero-heading">Connecting the right doctors with you.</h1>
-    </div>
-    <div>
-      {% if user.is_authenticated %}
-        {% if user.user_type == 'PR' %}
-          <a href="{% url 'dashboard-personal' %}"
+  <div class="hero">
+    <div class="hero-heading-container">
+      <div>
+        <h1 id="hero-heading">Connecting the right doctors with you.</h1>
+      </div>
+      <div>
+        {% if user.is_authenticated %}
+          {% if user.user_type == 'PR' %}
+            <a href="{% url 'dashboard-personal' %}"
+              ><button style="margin: 10px 0 0 0" class="btn">Go to Dashboard</button></a
+            >
+          {% else %}
+            <a href="{% url 'dashboard-doctor' %}"
             ><button style="margin: 10px 0 0 0" class="btn">Go to Dashboard</button></a
-          >
+            >
+          {% endif %}
         {% else %}
-          <a href="{% url 'dashboard-doctor' %}"
-          ><button style="margin: 10px 0 0 0" class="btn">Go to Dashboard</button></a
+          <a href="{% url 'select' %}"
+            ><button style="margin: 10px 0 0 0" class="btn">Get Started</button></a
           >
         {% endif %}
-      {% else %}
-        <a href="{% url 'select' %}"
-          ><button style="margin: 10px 0 0 0" class="btn">Get Started</button></a
-        >
-      {% endif %}
+      </div>
+    </div>
+    <div class="hero-image-container">
+      <img class="hero-image image-fluid" src="./static/Doc_Appoint/hero image.svg" />
     </div>
   </div>
-  <div class="hero-image-container">
-    <img class="hero-image image-fluid" src="./static/Doc_Appoint/hero image.svg" />
+  <div class="px-2 py-3 my-5 text-center">
+    <h1 class="display-5 fw-bold">Who are we?</h1>
+    <div class="col-lg-8 mx-auto">
+      <p class="lead mb-4">
+        We are a platform that makes it easier to book appoitments with your local
+        doctors. Using pen and paper for managing appointments in this digital era 
+        is a little old school. So we decided to change it. 
+        It is a simple way to book appointments. 
+        Choose a doctor you'd like to visit and book your visit. 
+        It is great for personal use as you can review your past visits and reports all at the same place.
+        <br>
+        Great for doctors as well, as they get an organized way to handle patient data and their record.
+      </p>
+    </div>
   </div>
-</div>
-<div class="px-2 py-3 my-5 text-center">
-  <h1 class="display-5 fw-bold">Who are we?</h1>
-  <div class="col-lg-8 mx-auto">
-    <p class="lead mb-4">
-      We are a platform that makes it easier to book appoitments with your local
-      doctors. Using pen and paper for managing appointments in this digital era 
-      is a little old school. So we decided to change it. 
-    </p>
+  <div class="text-center">
+    <h1 class="display-5 fw-bold">How does it work?</h1>
+    <div class="working-container-img">
+      <img class="image-fluid working" src="./static/Doc_Appoint/working.png" />
+    </div>
+    <p id="created">Created as the final project for Harvard's CS50 Web development course.</p>
   </div>
-</div>
-<div class="working">
-  
-</div>
-
-<div>
-
-</div>
 
 {% endblock %}
 
