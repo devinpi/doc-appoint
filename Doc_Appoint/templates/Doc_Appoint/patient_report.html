@@ -18,12 +18,12 @@
 </div>
 <div class="doc-details" id="appointment-form">
     <div class="doc-book-app">
-        <h3 style="font-weight: 500">Edit Report</h3>
+        <h3 style="font-weight: 500">Report for ({{appointment_report.appointment_date}} - {{appointment_report.appointment_time}})</h3>
     </div>
     <div>
         <form method="POST" action="">
             {% csrf_token %}
-            <textarea class="form-control" rows="15" id="edited_report" name="edited_report">{{report.written_report}}</textarea><br>
+            <textarea class="form-control" rows="15" id="edited_report" name="edited_report">{{appointment.report.written_report}}</textarea><br>
             <div class="next-steps-form-buttons">
                 <input class="btn" type="submit" value="Save">
                 <input class="btn" type="reset" value="Reset">

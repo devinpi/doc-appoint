@@ -324,17 +324,18 @@ def book_appointment(request, doc_id):
 @login_required
 def patient_report(request, p_id):
     patient = Patient.objects.get(id=p_id)
-    report = Report.objects.get(patient=patient)
+    report = Report.objects.filter(patient=patient)
+    appointment = Appointment.objects.get(patient=patient, appointment_date__gte=datetime.now())
     if request.method == 'POST':
         edited_report = request.POST['edited_report']
-
-        report.written_report = edited_report
-        report.save()
+        appointment.report.written_report = edited_report
+        # report.written_report = edited_report
+        appointment.report.save()
         return HttpResponseRedirect(reverse('dashboard-doctor'))
     else:
         return render(request, "Doc_Appoint/patient_report.html", {
             "patient": patient,
-            "report": report,
+            "appointment_report": appointment,
         })
 
 
@@ -347,15 +348,15 @@ def get_appointment(request, appointment):
             return JsonResponse({"error": "nothing found"}, status=404)
 
         if appointment == "upcoming-appointments":
-            appoints = Appointment.objects.filter(
+            appoints = reversed(Appointment.objects.filter(
                 patient=p,
                 appointment_date__gte=datetime.now()
-            )
+            ))
         elif appointment == "history-appointments":
-            appoints = Appointment.objects.filter(
+            appoints = reversed(Appointment.objects.filter(
                 patient=p,
                 appointment_date__lt=datetime.now()
-            )
+            ))
         elif appointment == "browse":
             try:
                 doctors = Doctor.objects.all()
@@ -374,15 +375,15 @@ def get_appointment(request, appointment):
             return JsonResponse({"error": "nothing found"}, status=404)
 
         if appointment == "upcoming-appointments":
-            appoints = Appointment.objects.filter(
+            appoints = reversed(Appointment.objects.filter(
                 doctor=d,
                 appointment_date__gte=datetime.now()
-            )
+            ))
         elif appointment == "history-appointments":
-            appoints = Appointment.objects.filter(
+            appoints = reversed(Appointment.objects.filter(
                 doctor=d,
                 appointment_date__lt=datetime.now()
-            )
+            ))
         else:
             return JsonResponse({"error": "Invalid value"}, status=400)
         return JsonResponse([appoint.serialize() for appoint in appoints], safe=False)
