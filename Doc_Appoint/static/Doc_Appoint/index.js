@@ -8,32 +8,52 @@ document.addEventListener('DOMContentLoaded', function() {
 function select_appointment_type() {
     let upcoming = document.getElementById("upcoming-appointments")
     let history = document.getElementById("history-appointments")
+    let browse = document.getElementById("browse");
     
     upcoming.addEventListener('click', function() {
-        document.querySelector('#search-results').style.display = 'none';
-        document.querySelector('#spa-results').style.display = 'block';
-        upcoming.style.color = 'white';
-        upcoming.style.backgroundColor = '#F39530';
-        upcoming.style.padding = "10px 10px 10px 10px";
-        upcoming.style.borderRadius = '5px'
-        history.style.backgroundColor = null;
-        history.style.color = 'black';
-        get_appointment_values("upcoming-appointments")
-    }
-    );
+            document.querySelector('#search-results').style.display = 'none';
+            document.querySelector('#spa-results').style.display = 'block';
+            document.querySelector('#browse-container').style.display="none";
+            upcoming.style.color = 'white';
+            upcoming.style.backgroundColor = '#F39530';
+            upcoming.style.padding = "10px 10px 10px 10px";
+            upcoming.style.borderRadius = '5px'
+            history.style.backgroundColor = null;
+            history.style.color = 'black';
+            browse.style.backgroundColor = null;
+            browse.style.color = 'black';
+            get_appointment_values("upcoming-appointments")
+        });
 
     history.addEventListener('click', function() {
+            document.querySelector('#search-results').style.display = 'none';
+            document.querySelector('#spa-results').style.display = 'block';
+            document.querySelector('#browse-container').style.display="none";
+            history.style.color = 'white';
+            history.style.backgroundColor = '#F39530';
+            history.style.padding = "10px 10px 10px 10px";
+            history.style.borderRadius = '5px'
+            upcoming.style.backgroundColor = null;
+            upcoming.style.color = 'black';
+            browse.style.backgroundColor = null;
+            browse.style.color = 'black';
+            get_appointment_values("history-appointments")
+        });  
+
+    browse.addEventListener('click', function() {
         document.querySelector('#search-results').style.display = 'none';
-        document.querySelector('#spa-results').style.display = 'block';
-        history.style.color = 'white';
-        history.style.backgroundColor = '#F39530';
-        history.style.padding = "10px 10px 10px 10px";
-        history.style.borderRadius = '5px'
+        document.querySelector('#spa-results').style.display = 'none';
+        document.querySelector('#browse-container').style.display="block";
+        browse.style.color='white';
+        browse.style.backgroundColor = '#F39530';
+        browse.style.padding = "10px 10px 10px 10px";
+        browse.style.borderRadius = '5px'
         upcoming.style.backgroundColor = null;
         upcoming.style.color = 'black';
-        get_appointment_values("history-appointments")
-    }
-    );  
+        history.style.backgroundColor = null;
+        history.style.color = 'black';
+        browse_docs();
+    });
 }
 
 function get_appointment_values(appointment){
@@ -106,3 +126,36 @@ function get_appointment_values(appointment){
 }
 
 
+function browse_docs() {
+    fetch("browse-doctors")
+    .then(response => response.json())
+    .then(doctors => {
+        doctors.forEach(doctor =>{
+            let browse_element = document.createElement('div');
+            browse_element.setAttribute("class", "element");
+            // element.setAttribute('id', `${appointment.id}`)
+            // element.id = appointment.id;
+            browse_wrapper = `
+                <div class="search-results" id="">
+                    <div>
+                        <div class="info">
+                            <span class=""><strong>Name:</strong> </span>${doctor.doctor}
+                        </div>
+                        <div class="info">
+                            <span class=""><strong>Phone: </strong> </span>${doctor.phone_number}
+                        </div>
+                        <div class="info">
+                            <span class=""><strong>Services:</strong> </span>${doctor.services}
+                        </div>
+                    </div>
+                    <div class="booking-form">
+                        <a href="${doctor.id}"><button class="booking-btn btn" value="Book an Appointment">Book an Appointment</button></a>
+                    </div>
+                </div>
+            `  
+            browse_element.innerHTML = browse_wrapper;
+            document.querySelector('#browse-container').appendChild(browse_element);
+        })
+    });
+    document.querySelector('#browse-container').innerHTML='';
+}   

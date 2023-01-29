@@ -32,33 +32,19 @@ function show_times(doc_id, selected_date) {
     .then(response => response.json())
     .then(times => {
         times.forEach(time => {
-            // console.log("time:", time);
-            // let t = values;
-            // const select_values = [...t];
-            // const s = select_values.map(options => options.value);
-            // console.log(s);
-            
-            // for (let i=0; i < s.length; i++) {
-                //     if(s[i] === time.appointment_time) {
-                    //         t[i].text = time.appointment_time + "Booked";
-                    //     }
-                    // }
             document.querySelector('#existing').style.display = 'block';
-            let times_container = document.createElement('div');
-            times_container.setAttribute("class", "element");
-            times_container.setAttribute('id', `${doc_id - time.appointment_time}`)
-            
+            const times_container = document.createElement('div');
             app = `
                     <div class="existing-appointments">
-                        <span class="existing-times">${time.appointment_time}</span>
+                        Time slot for <span class="existing-times">${time.appointment_time} </span> has been booked.
                     </div>
-                        <br>
+                    <br>
             `
             times_container.innerHTML = app;
             document.querySelector('#existing').appendChild(times_container);
         })
-    })
-
+    });
+    document.querySelector('#existing').innerHTML='';
 }
 
  

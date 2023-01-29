@@ -38,8 +38,19 @@ class Doctor(models.Model):
     address = models.TextField()
     phone_number = models.CharField(max_length=14, blank=True, null=True)
     gender = models.CharField(max_length=10, blank=True, null=True)
+
     def __str__(self):
         return f"{self.id} | {self.services} | {self.experience} | {self.patient} | {self.address}"
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "doctor": self.doctor_name.username,
+            "services": self.services,
+            "service_time_from": self.service_time_from,
+            "service_time_to": self.service_time_to,
+            "phone_number": self.phone_number,
+        }
 
 class Report(models.Model):
     patient = models.ForeignKey('Patient', on_delete=models.CASCADE, related_name="report_of_patient")

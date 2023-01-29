@@ -338,7 +338,6 @@ def patient_report(request, p_id):
         })
 
 
-
 # api for fetching appointment based on date
 def get_appointment(request, appointment):
     if request.user.user_type == 'PR':
@@ -357,6 +356,13 @@ def get_appointment(request, appointment):
                 patient=p,
                 appointment_date__lt=datetime.now()
             )
+        elif appointment == "browse":
+            try:
+                doctors = Doctor.objects.all()
+            except Doctor.DoesNotExist:
+                return JsonResponse({'error': "No doctors found!"})
+
+            return JsonResponse([doc.serialize() for doc in doctors], safe=False)
         else:
             return JsonResponse({"error": "Invalid value"}, status=400)
 
@@ -393,6 +399,7 @@ def check_appointment_time(request, doc_id, selected_date):
 
     return JsonResponse([times.serialize() for times in appointments_for_date], safe=False)
 
+
 # api for showing report for an appointment
 def appointment_report(request, app_id):
     # try:
@@ -403,6 +410,14 @@ def appointment_report(request, app_id):
     # return JsonResponse({'report': appointment.serialize()}, safe=False)
     pass
 
+
+def browse_docs(request):
+    try:
+        doctors = Doctor.objects.all()
+    except Doctor.DoesNotExist:
+        return JsonResponse({'error': "No doctors found!"})
+
+    return JsonResponse([doc.serialize() for doc in doctors], safe=False)
 
 
 
