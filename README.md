@@ -1,2 +1,13 @@
-# doc-appoint
-Capstone Project for CS50 Web Programming with Python and JavaScript
+# Final Project for CS50W with Python and Javascript
+
+## Project Name: *Doc-Appoint*
+
+##  
+
+
+## Distinctiveness and Complexity:
+
+
+## How to run the app:
+
+## Additional Information:
