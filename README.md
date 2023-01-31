@@ -7,8 +7,6 @@ Doc-Appoint is an effective way for patients to book appointments with the docto
 
 ![Home Page](https://github.com/devinpi/doc-appoint/blob/387231e8812f13e7ec1e918cff3cc8a1723c29b5/Doc_Appoint%20home%20Page.png)
 
-![Home Page](Doc_Appoint home Page.png)
-
 ### Why I built this?
 **The Story:** While I was doing this course, I had some health issues and I was frequently meeting with doctors, visiting clinics and hospitals. In my hometown, while big hospitals have a system to manage appointments and patients, private clinics on the other hand don't have any good management. I wanted it to be more organized which could help doctors as well as patients.
 
