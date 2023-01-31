@@ -4,7 +4,7 @@
 
 ## Introduction:
 Doc-Appoint is an effective way for patients to book appointments with the doctors that are available on the platform.
-![Doc_Appoint home Page](Doc_Appoint home Page.png)
+![Image](Doc_Appoint home Page.png)
 
 ### Why I built this?
 **The Story:** While I was doing this course, I had some health issues and I was frequently meeting with doctors, visiting clinics and hospitals. In my hometown, while big hospitals have a system to manage appointments and patients, private clinics on the other hand don't have any good management. I wanted it to be more organized which could help doctors as well as patients.
