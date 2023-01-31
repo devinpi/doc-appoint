@@ -37,7 +37,7 @@ I  decided to design a system where a user could either be a doctor or a patient
 
 ## Distinctiveness and Complexity:
 
-I wanted to think of something that would solve a problem. I had to think how the whole system will work from scratch. Also, I did come up with a theme, logo, name etc for the project. For this project I wanted the UI to be better than the previous projects.
+I wanted to think of something that would solve a problem. I had to think how the whole system will work from scratch. Also, I did come up with a theme, logo, name etc for the project. For this project I wanted the UI to be better than the previous projects. Used Figma, canva for design.
 
 **Solving 2 user types problem**
 - Before registering the user is given a choice to select whether they are looking for doctors or want to register as a doctor. Then assign that type based on the registration mode chosen by the user.
@@ -82,6 +82,26 @@ Creating 2 user types of the same application and deciding how the models will w
 
 ## How to run the app:
 
+- To run the app, first clone it on your pc using git command
+```
+git clone <insert repository link>
+```
+
+For database migrations use:
+```
+python manage.py makemigrations
+python manage.py migrate
+```
+
+For running the server use:
+```
+python manage.py runserver
+```
+
+For using shell to insert data and testing use:
+```
+python manage.py shell
+```
 
 ## Additional Information:
 
