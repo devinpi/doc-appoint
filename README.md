@@ -82,23 +82,23 @@ Creating 2 user types of the same application and deciding how the models will w
 
 ## How to run the app:
 
-- To run the app, first clone it on your pc using git command
+- To run the app, first clone it on your pc using git
 ```
 git clone <insert repository link>
 ```
 
-For database migrations use:
+- For database migrations use:
 ```
 python manage.py makemigrations
 python manage.py migrate
 ```
 
-For running the server use:
+- For running the server use:
 ```
 python manage.py runserver
 ```
 
-For using shell to insert data and testing use:
+- For using shell to insert data and testing use:
 ```
 python manage.py shell
 ```
