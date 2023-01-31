@@ -6,10 +6,7 @@
 Doc-Appoint is an effective way for patients to book appointments with the doctors that are available on the platform.
 
 ### Why I built this?
-
-**The Story:**
-
-While I was doing this course, I had some health issues and I was frequently meeting with doctors, visiting clinics and hospitals. In my hometown, while big hospitals have a system to manage appointments and patients, private clinics on the other hand don't have any good management. I wanted it to be more organized which could help doctors as well as patients.
+**The Story:** While I was doing this course, I had some health issues and I was frequently meeting with doctors, visiting clinics and hospitals. In my hometown, while big hospitals have a system to manage appointments and patients, private clinics on the other hand don't have any good management. I wanted it to be more organized which could help doctors as well as patients.
 
 ### What did I do to solve this? 
 I  decided to design a system where a user could either be a doctor or a patient. User can register on the platform and after registering, user can login and will get access to the dashboard.
@@ -35,7 +32,6 @@ I  decided to design a system where a user could either be a doctor or a patient
 - After an appointment has been booked with a particular doctor, that doctor can see it in the doctor's dashboard. The doctor can search for their patients and can add something to the patient's report through patient report page.
 
 ## Distinctiveness and Complexity:
-
 I wanted to think of something that would solve a problem. I had to think how the whole system will work from scratch. Also, I did come up with a theme, logo, name etc for the project. For this project I wanted the UI to be better than the previous projects. Used Figma, canva for design.
 
 **Solving 2 user types problem**
@@ -60,7 +56,6 @@ Creating 2 user types of the same application and deciding how the models will w
 
 
 ## What's there in each file?
-
 - **views.py:** Contains all the view functions that render the html pages. It also has the api and other(search, time-slots) functions created for asynchronous programming that uses javascript.
 - **models.py:** It has all the database model classes that are used for storing data. The classes or sqlite tables are: User, Patient, Doctor, Report, Appointment.
 - **index.js, index-doc.js:** Contain JS functions for async programming for toggling between upcoming, history, browse buttons without reloding the page.
@@ -80,7 +75,6 @@ Creating 2 user types of the same application and deciding how the models will w
 - Doc Appoint_footer.png, Doc Appoint_logo_v2.png, Doc Appoint_title_icon.png, doctor.svg, hero-image.svg, patient.svg, working.png: All the static images for the app.
 
 ## How to run the app:
-
 - To run the app, first clone it on your pc using git
 ```
 git clone <insert repository link>
@@ -103,6 +97,5 @@ python manage.py shell
 ```
 
 ## Additional Information:
-
 **Added OAuth2**
 - I implemented Google OAuth2 for authorization and security along with django's auth. The additions and changes in the code are still there, It worked properly but, I had to remove the (button used to login using google) at the end because of some errors.
