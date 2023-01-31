@@ -34,7 +34,6 @@ I  decided to design a system where a user could either be a doctor or a patient
 
 - After an appointment has been booked with a particular doctor, that doctor can see it in the doctor's dashboard. The doctor can search for their patients and can add something to the patient's report through patient report page.
 
-
 ## Distinctiveness and Complexity:
 
 I wanted to think of something that would solve a problem. I had to think how the whole system will work from scratch. Also, I did come up with a theme, logo, name etc for the project. For this project I wanted the UI to be better than the previous projects. Used Figma, canva for design.
