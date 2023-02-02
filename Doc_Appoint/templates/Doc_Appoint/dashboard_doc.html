@@ -2,7 +2,13 @@
 {% load static %}
 
 {% block body %}
-
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-danger">
+            <strong>{{message}}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
 <div class="search-container">
     <form method="POST" action="">
         {% csrf_token %}

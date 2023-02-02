@@ -1,6 +1,7 @@
 import json
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.http import JsonResponse
 from django.db import IntegrityError
 from django.http import JsonResponse
@@ -144,6 +145,7 @@ def next_steps_personal(request):
         return HttpResponse("User is not logged in a personal account!!")
 
 # Dashboard
+@login_required
 def dashboard_doc(request):
     if request.user.is_authenticated:
         if request.user.user_type == 'DR':
@@ -162,7 +164,7 @@ def dashboard_doc(request):
     else:
         return HttpResponse("User not logged in!")
 
-
+@login_required
 def dashboard_personal(request):
     if request.user.is_authenticated:
         if request.user.user_type == 'PR':
@@ -324,8 +326,20 @@ def book_appointment(request, doc_id):
 @login_required
 def patient_report(request, p_id):
     patient = Patient.objects.get(id=p_id)
-    report = Report.objects.filter(patient=patient)
-    appointment = Appointment.objects.get(patient=patient, appointment_date__gte=datetime.now())
+    u = User.objects.get(id=request.user.id)
+    doc = Doctor.objects.get(doctor_name=u.id)
+    # report = Report.objects.filter(patient=patient)
+    # error = False
+    # if Appointment.objects.get(patient=patient, appointment_date__gte=datetime.now()).exists():
+    #     appointment = Appointment.objects.get(patient=patient, appointment_date__gte=datetime.now())
+    # else:
+    #     error = True
+    try:
+        appointment = Appointment.objects.get(patient=patient, doctor=doc ,appointment_date__gte=datetime.now())
+    except Appointment.DoesNotExist:
+        messages.error(request, 'No new appointments found to edit the report.')
+        return redirect('dashboard-doctor')
+
     if request.method == 'POST':
         edited_report = request.POST['edited_report']
         appointment.report.written_report = edited_report
@@ -336,6 +350,7 @@ def patient_report(request, p_id):
         return render(request, "Doc_Appoint/patient_report.html", {
             "patient": patient,
             "appointment_report": appointment,
+            # "error": error,
         })
 
 
@@ -401,15 +416,15 @@ def check_appointment_time(request, doc_id, selected_date):
     return JsonResponse([times.serialize() for times in appointments_for_date], safe=False)
 
 
-# api for showing report for an appointment
-def appointment_report(request, app_id):
-    # try:
-    #     appointment = Appointment.objects.get(id=app_id)
-    # except Appointment.DoesNotExist:
-    #     return JsonResponse({"error": "appointment does not exist"}, status=400)
+# # api for showing report for an appointment
+# def appointment_report(request, app_id):
+#     # try:
+#     #     appointment = Appointment.objects.get(id=app_id)
+#     # except Appointment.DoesNotExist:
+#     #     return JsonResponse({"error": "appointment does not exist"}, status=400)
 
-    # return JsonResponse({'report': appointment.serialize()}, safe=False)
-    pass
+#     # return JsonResponse({'report': appointment.serialize()}, safe=False)
+#     pass
 
 
 def browse_docs(request):

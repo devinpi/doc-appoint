@@ -99,3 +99,5 @@ python manage.py shell
 ## Additional Information:
 **Added OAuth2**
 - I implemented Google OAuth2 for authorization and security along with django's auth. The additions and changes in the code are still there, It worked properly but, I had to remove the (button used to login using google) at the end because of some errors.
+
+- For this project all available appointment time slots will have a difference of 30 minutes. 

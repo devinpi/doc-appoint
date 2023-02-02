@@ -17,6 +17,6 @@ urlpatterns = [
      # api routes
      path("dashboard/<str:appointment>", views.get_appointment, name="appoints"),
      path("appointments/<int:doc_id>/<str:selected_date>", views.check_appointment_time, name="check-time"),
-     path("dashboard/report/<int:app_id>", views.appointment_report, name="app-report"),
+     # path("dashboard/report/<int:app_id>", views.appointment_report, name="app-report"),
      path("browse-doctors", views.browse_docs, name="browse_docs"),
 ]
