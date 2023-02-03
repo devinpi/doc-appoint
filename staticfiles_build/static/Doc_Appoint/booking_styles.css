@@ -1,0 +1,64 @@
+:root {
+    --main-theme-color: #06acd7;
+    --main-theme-button: #F39530;
+}
+
+.doc-details-container {
+    padding: 15px;
+}
+.doc-details{
+    padding: 15px;
+}
+.doc-name{
+    text-align: center;
+    margin: 15px 0 0 0;
+    color: var(--main-theme-color)
+}
+
+.doc-book-app{
+    text-align: center;
+    /* background-color: #75c1d4; */
+    /* background-color: #acddea; */
+    background-color: #e7f6fb;
+    color: rgb(74, 74, 74);
+}
+
+.doc-book-app>h3{
+    padding: 10px;
+}
+
+
+.next-steps-form-buttons input[type='submit']{
+    background-color: var(--main-theme-button);
+    color: white;
+    margin: 10px;
+}
+
+.next-steps-form-buttons input[type='reset']{
+    border: 1px solid var(--main-theme-button);
+    color: var(--main-theme-button);
+    margin: 10px;
+}
+
+
+.existing-times{
+    background-color: #e7f6fb;
+    border-radius: 5px;
+    padding: 5px;
+    margin-right: 5px;
+}
+
+/* .slots-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.time-slot{
+    border: 1px solid black;
+    padding: 10px;
+    border-radius: 3px;
+    background-color: #a9a9a9;
+} */
