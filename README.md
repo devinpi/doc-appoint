@@ -2,7 +2,7 @@
 
 ## Project Name: *Doc-Appoint*
 
-## Video URL: (https://youtu.be/qKvAbQnQL1M)
+## Demo Video URL: (https://youtu.be/qKvAbQnQL1M)
 
 ## Introduction:
 Doc-Appoint is an effective way for patients to book appointments with the doctors that are available on the platform.
